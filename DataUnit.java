@@ -140,4 +140,10 @@ public class DataUnit {
 
         return this.content.size();
     }
+
+    // method is used to clear a data unit of all its fragment
+    public void clear() {
+
+        this.content = new ArrayList<>();
+    }
 }
