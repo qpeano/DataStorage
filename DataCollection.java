@@ -1,0 +1,284 @@
+/* This class is designed to act as a data storing unit for my projects. It writes information to
+ * files and then extracts that information in other runs. The information can be changed through deletion,
+ * incrementation. You can also get contents of other DataCollection files, and can clear current file
+ * The information is divided into units called DataUnits, that consists of key-value (label, content) pairs.
+ *
+ * This is a proof of concept for makeshift databases using files
+ *
+ * Author @qpeano [created 2022-01-29 | last updated: 2022-01-31]
+ */
+
+
+package data;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class DataCollection {
+
+    private File file; // where all data units are stored
+    private ArrayList<DataUnit> units; // all the individual units
+    private boolean isEmpty; // indicator for a few methods
+
+    /* CONSTRUCTORS */
+
+    // ctor 1, connects to a file with specified name, content is extracted if file is NOT empty
+    // throws IOException if something goes wrong with file creation/ connection
+    public DataCollection(String path) throws IOException {
+
+        this.file = new File(path); // makes connection to file
+        this.file.createNewFile(); // creates file if it does not exist
+        this.units = new ArrayList<>();
+        this.isEmpty = !(this.hasContent(this.file)); // to check if file has content, negated to suit use of field
+
+        if (!this.Empty) { // if file is not empty all data is extracted and written to list of units
+
+            this.extract(this.file, this.units);
+        }
+    }
+
+    // ctor 2, connects to a file with specified name, list of units is given some starting values from user
+    // content from file is extracted if file is NOT empty
+    // throws IOException if something goes wrong with file creation/ connection
+    public DataCollection(String path, ArrayList<DataUnit> startingUnits) throws IOException {
+
+        this.file = new File(path); // makes connection to file
+        this.file.createNewFile(); // creates file if it does not exist
+        this.units = startingUnits;
+        this.isEmpty = !(this.hasContent(this.file)); // to check if file has content, negated to suit use of field
+
+        if (!this.Empty) { // if file is not empty all data is extracted and written to list of units
+
+            this.extract(this.file, this.units);
+        }
+    }
+
+    /* INTERNAL */
+
+    // this method is used to check if a file has any content whatsoever, used in conjuntion with this.extract
+    // throws exception if something goes wrong with reading file
+    private boolean hasContent(File f) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
+
+        String line; // a line in the file
+        boolean result = false;
+
+        while ((line = br.readLine()) != null) { // result remains false until line doesn't hold an empty value
+
+             result = true;
+        }
+
+        br.close();
+        return result;
+    }
+
+    // this method extracts all data from a file and fills the collections data units with said data
+    // throws exception if something goes wrong while writing to file
+    private void extract(File f, ArrayList<DataUnit> u) throws IOException {
+
+        BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
+        Pattern start = Pattern.compile("\\w+ {"); // marker for beginning of a new unit
+        Pattern end = Pattern.compile("}"); // marker for end of a unit
+        String line; // a line in the file
+        Matcher macthStart; // matches a line from file with start charcter
+        Matcher macthEnd; // matches a line from file with end charcter
+
+        while ((line = br.readLine()) != null) { // do the following if the line doesn't hold an empty value
+
+            matchStart = start.match(line);
+            matchEnd = end.match(line);
+
+            if (matchStart.find()) { // if start character is found in line, add that line as a new unit
+
+                u.add(new DataUnit(line));
+                continue;
+            }
+            else if (matchEnd.find()) { // if end character is found in line, go to next line
+
+                continue;
+            }
+            else { // else add line as a new data fragment to the last added unit
+
+                int lastAddedUnit = u.size() - 1; // get index of last added unit
+                u.get(lastAddedUnit).addData(line); // access last unit, added new fragment
+            }
+        }
+
+        br.close(); // closed connection to file
+    }
+
+    // this method is used for printing out all data units and their content to a file
+    // throws exception if something goes wrong with writing to file
+    private void printDataUnits(File f) throws IOException {
+
+        BufferedWriter bw = new BufferedWiter(new FileWriter(f)); // writing mechanism to file
+        for (DataUnit unit : this.units) { // writes all data units to storing file
+
+            bw.write(unit.toString() + "\n");
+        }
+
+        bw.close(); // closed connection to file
+    }
+
+    /* USER INTERFACE */
+
+    // this method is used for adding a new unit to collection
+    // throws exception if something goes wrong with writing to file
+    public void addDataUnit(String label, String content) throws IOException {
+
+        this.units.add(new DataUnit(label, content)); // adds new unit
+        this.printDataUnits(this.file); // prints all units out to file
+        this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+    }
+
+    // this is an overloaded method of the one above and is used for adding a new unit to collection
+    // throws exception if something goes wrong with writing to file
+    public void addDataUnit(String label, ArrayList<String> content) throws IOException {
+
+        this.units.add(new DataUnit(label, content)); // adds new unit
+        this.printDataUnits(this.file); // prints all units out to file
+        this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+    }
+
+    // this method is used for removing all occurrences a data unit with specific label
+    // throws exception if a unit with specific label is not found
+    public void removeDataUnit(String targetLabel) throws IOException, Exception {
+
+        if (this.contains(targetLabel)) { // if collection contains a unit with specified label, the unit is removed
+
+            for (int i = 0; i < this.size(); i++) { // goes through all units
+
+                if (this.dataUnitList.get(i).getLabel() == targetLabel) { // tests if each units label matches specifed label
+
+                    this.dataUnitList.remove(i); // removes unit with specified label, if found
+                }
+            }
+
+            this.printDataUnits(this.file); // prints out all remaining units
+        }
+        else { // if not in collection, method throws a message informing the user
+
+            String msg = "DataUnit With Label \"" + targetLabel + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
+
+        this.isEmpty = !(this.hasContent(this.file)); // checks if file without removed unit is now empty
+    }
+
+    // this method is used in the one above and is used for checking if a unit with specific label exists in collection
+    // throws exception if collection is empty or if hasContent() throws an exception
+    public boolean contains(String label) throws IOException, Exception {
+
+        if (this.hasContent(this.file)) { // checks if collection is empty
+
+            for (DataUnit unit : this.units) { // tests if each units label matches specifed label
+
+                if (unit.getLabel() == label) { // unit is found, -> returns true
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        throw new Exception("DataCollection Is Empty"); // returns a message informing user about the emptiness of collection
+    }
+
+    // this method is used to see if a collection (file representng a collection) is empty
+    public boolean isEmpty() {
+
+        return this.isEmpty;
+    }
+
+    // this method is used to see where the collection (text file representing a collection) is stored on the computer
+    public String getPath() {
+
+        return this.file.toString();
+    }
+
+    // this method is used for getting the size of the collection (number of units)
+    public int size() {
+
+        return this.units.size();
+    }
+
+    // this method is used for clearing a collection clean. All data is lost forever if not copied to another collection
+    // throws exception if something goes wrong while writing
+    public void clear() throws IOException {
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(this.file)); // connection to file, writing mechanism
+        bw.write(""); // overwrite everything with an empty string
+        bw.close(); // closed connection
+
+        this.units.clear(); // deletes all units from list
+        this.isEmpty = true; // sets status to EMPTY
+    }
+
+    // this method is used to copy over all data units from another collection, it will result in duplicates
+    // throws exception if something happens while reading or writing between collections
+    public void getContentsOf(DataCollection dc) throws IOException {
+
+        File f = new File(dc.getPath()); // new file connection to other collection is made
+        this.extract(f, this.units); // this object extracts all units from other
+        this.printDataUnits(this.file); // all units are the printed out in this collection
+        this.isEmpty = !(this.hasContent(this.file)); // checks then if this collection is empty or not
+    }
+
+    // this method checks is this collection is identical to another collection
+    public boolean equals(DataCollection dc) {
+
+        String state1 = this.toString();
+        String state2 = dc.toString();
+
+        return state1.equals(state2);
+    }
+
+    // this method is used for adding a data fragment to an existing data unit in collection
+    // throws exception if unit with specified label does not exist
+    public void addData(String label, String fragment) throws IOException, Exception {
+
+        if (this.contains(label)) { // if collection contains a unit with specified label
+
+            for (int i = 0; i < this.size(); i++) { // goes through all all units
+
+                if (this.units.get(i).getLabel() == label) { // do the following if data unit is found
+
+                    this.units.get(i).addData(fragment); // adds fragment to unit
+                }
+            }
+
+            this.printDataUnits(this.file); // prints all data units with their content to file
+        }
+        else { // do the following if collection doesn't contain a unit with specified label
+
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
+    }
+
+    // this method is used to get rid of all content/ fragments from units with a specific label
+    // throws exception if something goes wrong while searching for unit, or printing all remaining units
+    public void clearDataUnit(String label) throws IOException, Exception {
+
+        if (this.contains(label)) { // if collection contains a unit with specified label
+
+            for (DataUnit unit : this.units) { // goes through all all units
+
+                if (unit.getLabel() == label) { // do the following if data unit is found
+
+                    unit.clear(); // clears data unit
+                }
+            }
+
+            this.printDataUnits(this.file); // prints all remaining units
+        }
+        else { // do the following if collection doesn't contain a unit with specified label
+
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
+    }
+}
