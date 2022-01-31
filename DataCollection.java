@@ -32,7 +32,7 @@ public class DataCollection {
         this.units = new ArrayList<>();
         this.isEmpty = !(this.hasContent(this.file)); // to check if file has content, negated to suit use of field
 
-        if (!this.Empty) { // if file is not empty all data is extracted and written to list of units
+        if (!this.isEmpty()) { // if file is not empty all data is extracted and written to list of units
 
             this.extract(this.file, this.units);
         }
@@ -48,7 +48,7 @@ public class DataCollection {
         this.units = startingUnits;
         this.isEmpty = !(this.hasContent(this.file)); // to check if file has content, negated to suit use of field
 
-        if (!this.Empty) { // if file is not empty all data is extracted and written to list of units
+        if (!this.isEmpty()) { // if file is not empty all data is extracted and written to list of units
 
             this.extract(this.file, this.units);
         }
@@ -79,16 +79,16 @@ public class DataCollection {
     private void extract(File f, ArrayList<DataUnit> u) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
-        Pattern start = Pattern.compile("\\w+ {"); // marker for beginning of a new unit
-        Pattern end = Pattern.compile("}"); // marker for end of a unit
+        Pattern start = Pattern.compile("\\w+ \\{"); // marker for beginning of a new unit
+        Pattern end = Pattern.compile("\\}"); // marker for end of a unit
         String line; // a line in the file
-        Matcher macthStart; // matches a line from file with start charcter
-        Matcher macthEnd; // matches a line from file with end charcter
+        Matcher matchStart; // matches a line from file with start charcter
+        Matcher matchEnd; // matches a line from file with end charcter
 
         while ((line = br.readLine()) != null) { // do the following if the line doesn't hold an empty value
 
-            matchStart = start.match(line);
-            matchEnd = end.match(line);
+            matchStart = start.matcher(line);
+            matchEnd = end.matcher(line);
 
             if (matchStart.find()) { // if start character is found in line, add that line as a new unit
 
@@ -113,10 +113,10 @@ public class DataCollection {
     // throws exception if something goes wrong with writing to file
     private void printDataUnits(File f) throws IOException {
 
-        BufferedWriter bw = new BufferedWiter(new FileWriter(f)); // writing mechanism to file
+        BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
         for (DataUnit unit : this.units) { // writes all data units to storing file
 
-            bw.write(unit.toString() + "\n");
+            bw.write(unit.toString());
         }
 
         bw.close(); // closed connection to file
@@ -150,9 +150,9 @@ public class DataCollection {
 
             for (int i = 0; i < this.size(); i++) { // goes through all units
 
-                if (this.dataUnitList.get(i).getLabel() == targetLabel) { // tests if each units label matches specifed label
+                if (this.units.get(i).getLabel() == targetLabel) { // tests if each units label matches specifed label
 
-                    this.dataUnitList.remove(i); // removes unit with specified label, if found
+                    this.units.remove(i); // removes unit with specified label, if found
                 }
             }
 
@@ -227,14 +227,8 @@ public class DataCollection {
         this.isEmpty = !(this.hasContent(this.file)); // checks then if this collection is empty or not
     }
 
-    // this method checks is this collection is identical to another collection
-    public boolean equals(DataCollection dc) {
-
-        String state1 = this.toString();
-        String state2 = dc.toString();
-
-        return state1.equals(state2);
-    }
+    // this method checks is this collections is identical to another
+    /* */
 
     // this method is used for adding a data fragment to an existing data unit in collection
     // throws exception if unit with specified label does not exist
