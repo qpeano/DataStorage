@@ -35,7 +35,7 @@ public class DataUnit {
     // ctor 3, accepts only label
     public DataUnit(String name) {
 
-        this.label = name;
+        this.label = this.formatLabel(name);
         this.content = new ArrayList<>();
     }
 
@@ -44,7 +44,7 @@ public class DataUnit {
     // this method is used to remove any formatting characters ({, }, and \t) from the label of a unit
     private String formatLabel(String name) {
 
-        String newName = name.replaceAll("[ {]", "").replaceAll("[}]", "");
+        String newName = name.replaceAll("[ {]", "");
         return newName;
     }
 
@@ -125,7 +125,7 @@ public class DataUnit {
             }
         }
 
-        state += "\n}";
+        state += "\n}\n";
         return state;
     }
 
