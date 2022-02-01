@@ -251,9 +251,9 @@ public class DataCollection {
     // also used in equals to get string representations of entire collections
     public String toString() {
 
-        String state = this.getPath() + ":\n";
+        String state = this.getPath() + ":\n"; // adds the path of collection
 
-        for (DataUnit unit : this.units) {
+        for (DataUnit unit : this.units) { // goes through every unit and add their content to the string
 
             state += unit.toString();
         }
@@ -277,11 +277,9 @@ public class DataCollection {
 
             this.printDataUnits(this.file); // prints all data units with their content to file
         }
-        else { // do the following if collection doesn't contain a unit with specified label
-
-            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
-            throw new Exception(msg);
-        }
+        // do the following if collection doesn't contain a unit with specified label
+        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+        throw new Exception(msg);
     }
 
     // this method is used to get rid of all content/ fragments from units with a specific label
@@ -300,10 +298,26 @@ public class DataCollection {
 
             this.printDataUnits(this.file); // prints all remaining units
         }
-        else { // do the following if collection doesn't contain a unit with specified label
+        // do the following if collection doesn't contain a unit with specified label
+        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+        throw new Exception(msg);
+    }
 
-            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
-            throw new Exception(msg);
+    // this method is used to get the content of a the first found unit with specified label
+    public ArrayList<String> get(String label) throws Exception {
+
+        if (this.contains(label)) { // if a unit with specific label exists
+
+            for (DataUnit unit : this.units) { // go through whole list
+
+                if (unit.getLabel() == label) { // if a first instance of unit with specific label is found
+
+                    return unit.getContent(); // return its fragments
+                }
+            }
         }
+        // else inform the user about the non-existence of a unit with specified label
+        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+        throw new Exception(msg);
     }
 }
