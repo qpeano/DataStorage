@@ -219,12 +219,17 @@ public class DataCollection {
 
     // this method is used to copy over all data units from another collection, it will result in duplicates
     // throws exception if something happens while reading or writing between collections
-    public void getContentsOf(DataCollection dc) throws IOException {
+    public void addContentsOf(DataCollection dc) throws IOException {
 
-        File f = new File(dc.getPath()); // new file connection to other collection is made
-        this.extract(f, this.units); // this object extracts all units from other
-        this.printDataUnits(this.file); // all units are the printed out in this collection
-        this.isEmpty = !(this.hasContent(this.file)); // checks then if this collection is empty or not
+        if (!dc.isEmpty()) { // checks if other collection is NOT empty
+
+            for (DataUnit unit : dc.units) { // if so, goes through all units
+
+                this.units.add(unit); // adds units to this collection
+            }
+
+            this.printDataUnits(this.file); // prints out all units
+        }
     }
 
     // this method checks is this collections is identical to another
