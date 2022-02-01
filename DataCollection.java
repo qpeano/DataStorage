@@ -232,8 +232,34 @@ public class DataCollection {
         }
     }
 
+    @Override
     // this method checks is this collections is identical to another
-    /* */
+    public boolean equals(Object other) {
+
+        if (other instanceof DataCollection) { // checks if argument is a collection
+
+            DataCollection dc = (DataCollection) other; // casted to access behaviour and fields of a collection
+
+            return (this.units.equals(dc.units)); // uses ArrayList.equals to see if contents of collections are identical
+        }
+
+        return false;
+    }
+
+    @Override
+    // this method is used as a diagnostics tool to see if all other methods are working
+    // also used in equals to get string representations of entire collections
+    public String toString() {
+
+        String state = this.getPath() + ":\n";
+
+        for (DataUnit unit : this.units) {
+
+            state += unit.toString();
+        }
+
+        return state;
+    }
 
     // this method is used for adding a data fragment to an existing data unit in collection
     // throws exception if unit with specified label does not exist
