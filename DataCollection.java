@@ -5,7 +5,7 @@
  *
  * This is a proof of concept for makeshift databases using files
  *
- * Author @qpeano [created 2022-01-29 | last updated: 2022-01-31]
+ * Author @qpeano [created 2022-01-29 | last updated: 2022-02-01]
  */
 
 
