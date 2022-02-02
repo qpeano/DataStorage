@@ -5,7 +5,7 @@
  *
  * This is a proof of concept for makeshift databases using files
  *
- * Author @qpeano [created 2022-01-29 | last updated: 2022-02-01]
+ * Author @qpeano [created 2022-01-29 | last updated: 2022-02-02]
  */
 
 
@@ -99,6 +99,10 @@ public class DataCollection {
 
                 continue;
             }
+            else if (this.size() < 1) { // to check if formatting is correct, !NOT SUSTAINABLE IMPLEMENTATION!
+
+                throw new IOException("Formatting Error in Collection");
+            }
             else { // else add line as a new data fragment to the last added unit
 
                 int lastAddedUnit = u.size() - 1; // get index of last added unit
@@ -150,7 +154,7 @@ public class DataCollection {
 
             for (int i = 0; i < this.size(); i++) { // goes through all units
 
-                if (this.units.get(i).getLabel() == targetLabel) { // tests if each units label matches specifed label
+                if (this.units.get(i).getLabel().equals(targetLabel)) { // tests if each units label matches specifed label
 
                     this.units.remove(i); // removes unit with specified label, if found
                 }
@@ -175,7 +179,7 @@ public class DataCollection {
 
             for (DataUnit unit : this.units) { // tests if each units label matches specifed label
 
-                if (unit.getLabel() == label) { // unit is found, -> returns true
+                if (unit.getLabel().equals(label)) { // unit is found, -> returns true
 
                     return true;
                 }
@@ -269,17 +273,19 @@ public class DataCollection {
 
             for (int i = 0; i < this.size(); i++) { // goes through all all units
 
-                if (this.units.get(i).getLabel() == label) { // do the following if data unit is found
-
+                if (this.units.get(i).getLabel().equals(label)) { // do the following if data unit is found
+                    //System.out.println("hello");
                     this.units.get(i).addData(fragment); // adds fragment to unit
                 }
             }
 
             this.printDataUnits(this.file); // prints all data units with their content to file
         }
-        // do the following if collection doesn't contain a unit with specified label
-        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
-        throw new Exception(msg);
+        else {
+            // do the following if collection doesn't contain a unit with specified label
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
     }
 
     // this method is used to get rid of all content/ fragments from units with a specific label
@@ -290,7 +296,7 @@ public class DataCollection {
 
             for (DataUnit unit : this.units) { // goes through all all units
 
-                if (unit.getLabel() == label) { // do the following if data unit is found
+                if (unit.getLabel().equals(label)) { // do the following if data unit is found
 
                     unit.clear(); // clears data unit
                 }
@@ -298,9 +304,11 @@ public class DataCollection {
 
             this.printDataUnits(this.file); // prints all remaining units
         }
-        // do the following if collection doesn't contain a unit with specified label
-        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
-        throw new Exception(msg);
+        else {
+            // do the following if collection doesn't contain a unit with specified label
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
     }
 
     // this method is used to get the content of a the first found unit with specified label
@@ -310,7 +318,7 @@ public class DataCollection {
 
             for (DataUnit unit : this.units) { // go through whole list
 
-                if (unit.getLabel() == label) { // if a first instance of unit with specific label is found
+                if (unit.getLabel().equals(label)) { // if a first instance of unit with specific label is found
 
                     return unit.getContent(); // return its fragments
                 }
@@ -319,5 +327,23 @@ public class DataCollection {
         // else inform the user about the non-existence of a unit with specified label
         String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
         throw new Exception(msg);
+    }
+
+    // diagnostics tool to check if all units are in the collection
+    // throws exception if a collection is empty
+    public ArrayList<String> getAllLabels() throws Exception {
+
+        if (!this.isEmpty()) { // if NOT empty, proceed
+
+            ArrayList<String> labels = new ArrayList<String>(); // make a list for all labels
+            for (DataUnit unit : this.units) { // go through all units...
+
+                labels.add(unit.getLabel()); //... and get their lables
+            }
+
+            return labels; // return list of labels
+        }
+
+        throw new Exception("DataCollection Is Empty"); // else, inform user
     }
 }
