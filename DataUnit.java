@@ -2,7 +2,7 @@
  * This class represents a unit of data that consists of a label and content. The content consists of a list
  * of strings. Each string is called a fragment.
  *
- *  Author @qpeano [created 2022-01-28 | last updated 2022-01-28]
+ *  Author @qpeano [created 2022-01-28 | last updated 2022-02-02]
  */
 
 
@@ -56,8 +56,8 @@ public class DataUnit {
 
         for (String str : info) {
 
-            tmp = str.replaceAll("\t", "");
-            newInfo.add(tmp);
+            tmp = str.replaceAll("    ", ""); // removes tab
+            newInfo.add(str);
         }
 
         return newInfo;
@@ -67,7 +67,7 @@ public class DataUnit {
     // of a unit if it was instantiated with ctor 3
     private String formatContent(String info) {
 
-        String newInfo = info.replaceAll("\t", "");
+        String newInfo = info.replaceAll("    ", ""); // removes tab
         return newInfo;
     }
 
@@ -83,9 +83,9 @@ public class DataUnit {
     // this method is used to remove a fragment from unit, throws Exception if fragment doesn't exist
     public void removeData(String targetFragment) throws Exception {
 
-        if (this.hasData(targetFragment)) {
+        if (this.hasData(targetFragment)) { // if collection has a fragment
 
-            this.content.remove(targetFragment);
+            this.content.remove(targetFragment); // removes fragment
         }
         else {
 
@@ -111,17 +111,17 @@ public class DataUnit {
     // diagnostics tool to see if everything works and printing tool for the DataCollection class
     public String toString() {
 
-        String state = this.label + " {\n";
+        String state = this.label + " {\n"; // label of unit
 
-        for (int i = 0; i < this.content.size(); i++) {
+        for (int i = 0; i < this.content.size(); i++) { // goes through whole list of fragment and gets their content
 
-            if (i == this.content.size() - 1) {
+            if (i == this.content.size() - 1) { // if it's the last fragment, dont add newline char
 
-                state += "\t" + this.content.get(i);
+                state += "    " + this.content.get(i); // adds a tab
             }
-            else {
+            else { // else, add a newline char
 
-                state += "\t" + this.content.get(i) + "\n";
+                state += "    " + this.content.get(i) + "\n"; // adds a tab and newline
             }
         }
 
