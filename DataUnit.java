@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class DataUnit {
 
     private String label; // name of specific unit of data
-    private ArrayList<String> content; // all the content the unit holds
+    private ArrayList<String> fragments; // all the content the unit holds
 
     /* CONSTRUCTORS */
 
@@ -20,23 +20,23 @@ public class DataUnit {
     public DataUnit(String name, ArrayList<String> info) {
 
         this.label = this.formatLabel(name);
-        this.content = this.formatContent(info);
+        this.fragments = this.formatFragment(info);
     }
 
     // ctor 2, accepts a label and a singular value
     public DataUnit(String name, String info) {
 
         this.label = this.formatLabel(name);
-        String newInfo = this.formatContent(info);
-        this.content = new ArrayList<>();
-        this.content.add(newInfo);
+        String newInfo = this.formatFragment(info);
+        this.fragments = new ArrayList<>();
+        this.fragments.add(newInfo);
     }
 
     // ctor 3, accepts only label
     public DataUnit(String name) {
 
         this.label = this.formatLabel(name);
-        this.content = new ArrayList<>();
+        this.fragments = new ArrayList<>();
     }
 
     /* INTERNAL */
@@ -49,7 +49,7 @@ public class DataUnit {
     }
 
     // this method is used to remove any formatting characters from all the content of a unit
-    private ArrayList<String> formatContent(ArrayList<String> info) {
+    private ArrayList<String> formatFragment(ArrayList<String> info) {
 
         ArrayList<String> newInfo = new ArrayList<>();
         String tmp;
@@ -65,7 +65,7 @@ public class DataUnit {
 
     // this method is overloaded, this version is used to remove formatting characters from content of
     // of a unit if it was instantiated with ctor 3
-    private String formatContent(String info) {
+    private String formatFragment(String info) {
 
         String newInfo = info.replaceAll("    ", ""); // removes tab
         return newInfo;
@@ -74,18 +74,18 @@ public class DataUnit {
     /* USER INTERFACE */
 
     // this method is used to add a new fragment of data to unit
-    public void addData(String fragment) {
+    public void addTo(String fragment) {
 
-        String newFragment = this.formatContent(fragment);
-        this.content.add(newFragment);
+        String newFragment = this.formatFragment(fragment);
+        this.fragments.add(newFragment);
     }
 
     // this method is used to remove a fragment from unit, throws Exception if fragment doesn't exist
-    public void removeData(String targetFragment) throws Exception {
+    public void remove(String targetFragment) throws Exception {
 
-        if (this.hasData(targetFragment)) { // if collection has a fragment
+        if (this.hasFragment(targetFragment)) { // if collection has a fragment
 
-            this.content.remove(targetFragment); // removes fragment
+            this.fragments.remove(targetFragment); // removes fragment
         }
         else {
 
@@ -101,10 +101,10 @@ public class DataUnit {
     }
 
     // this method is used to get a copy of the content of a unit
-    public ArrayList<String> getContent() {
+    public ArrayList<String> getFragments() {
 
-        ArrayList<String> contentCopy = new ArrayList<String>(this.content);
-        return contentCopy;
+        ArrayList<String> fragmentsCopy = new ArrayList<String>(this.fragments);
+        return fragmentsCopy;
     }
 
     @Override
@@ -113,15 +113,15 @@ public class DataUnit {
 
         String state = this.label + " {\n"; // label of unit
 
-        for (int i = 0; i < this.content.size(); i++) { // goes through whole list of fragment and gets their content
+        for (int i = 0; i < this.fragments.size(); i++) { // goes through whole list of fragment and gets their content
 
-            if (i == this.content.size() - 1) { // if it's the last fragment, dont add newline char
+            if (i == this.fragments.size() - 1) { // if it's the last fragment, dont add newline char
 
-                state += "    " + this.content.get(i); // adds a tab
+                state += "    " + this.fragments.get(i); // adds a tab
             }
             else { // else, add a newline char
 
-                state += "    " + this.content.get(i) + "\n"; // adds a tab and newline
+                state += "    " + this.fragments.get(i) + "\n"; // adds a tab and newline
             }
         }
 
@@ -130,20 +130,20 @@ public class DataUnit {
     }
 
     // method is used to check if a unit contains a specific fragment
-    public boolean hasData(String target) {
+    public boolean hasFragment(String target) {
 
-        return this.content.contains(target);
+        return this.fragments.contains(target);
     }
 
     // method is used to see how many data fragment a unit contains
     public int size() {
 
-        return this.content.size();
+        return this.fragments.size();
     }
 
     // method is used to clear a data unit of all its fragment
     public void clear() {
 
-        this.content = new ArrayList<>();
+        this.fragments = new ArrayList<>();
     }
 }
