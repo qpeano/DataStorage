@@ -106,7 +106,7 @@ public class DataCollection {
             else { // else add line as a new data fragment to the last added unit
 
                 int lastAddedUnit = u.size() - 1; // get index of last added unit
-                u.get(lastAddedUnit).addData(line); // access last unit, added new fragment
+                u.get(lastAddedUnit).addTo(line); // access last unit, added new fragment
             }
         }
 
@@ -130,7 +130,7 @@ public class DataCollection {
 
     // this method is used for adding a new unit to collection
     // throws exception if something goes wrong with writing to file
-    public void addDataUnit(String label, String content) throws IOException {
+    public void add(String label, String content) throws IOException {
 
         this.units.add(new DataUnit(label, content)); // adds new unit
         this.printDataUnits(this.file); // prints all units out to file
@@ -139,7 +139,7 @@ public class DataCollection {
 
     // this is an overloaded method of the one above and is used for adding a new unit to collection
     // throws exception if something goes wrong with writing to file
-    public void addDataUnit(String label, ArrayList<String> content) throws IOException {
+    public void add(String label, ArrayList<String> content) throws IOException {
 
         this.units.add(new DataUnit(label, content)); // adds new unit
         this.printDataUnits(this.file); // prints all units out to file
@@ -148,7 +148,7 @@ public class DataCollection {
 
     // this method is used for removing all occurrences a data unit with specific label
     // throws exception if a unit with specific label is not found
-    public void removeDataUnit(String targetLabel) throws IOException, Exception {
+    public void remove(String targetLabel) throws IOException, Exception {
 
         if (this.contains(targetLabel)) { // if collection contains a unit with specified label, the unit is removed
 
@@ -223,7 +223,7 @@ public class DataCollection {
 
     // this method is used to copy over all data units from another collection, it will result in duplicates
     // throws exception if something happens while reading or writing between collections
-    public void addContentsOf(DataCollection dc) throws IOException {
+    public void addContentOf(DataCollection dc) throws IOException {
 
         if (!dc.isEmpty()) { // checks if other collection is NOT empty
 
@@ -267,15 +267,15 @@ public class DataCollection {
 
     // this method is used for adding a data fragment to an existing data unit in collection
     // throws exception if unit with specified label does not exist
-    public void addData(String label, String fragment) throws IOException, Exception {
+    public void addTo(String label, String fragment) throws IOException, Exception {
 
         if (this.contains(label)) { // if collection contains a unit with specified label
 
             for (int i = 0; i < this.size(); i++) { // goes through all all units
 
                 if (this.units.get(i).getLabel().equals(label)) { // do the following if data unit is found
-                    //System.out.println("hello");
-                    this.units.get(i).addData(fragment); // adds fragment to unit
+
+                    this.units.get(i).addTo(fragment); // adds fragment to unit
                 }
             }
 
@@ -320,7 +320,7 @@ public class DataCollection {
 
                 if (unit.getLabel().equals(label)) { // if a first instance of unit with specific label is found
 
-                    return unit.getContent(); // return its fragments
+                    return unit.getFragments(); // return its fragments as a list
                 }
             }
         }
