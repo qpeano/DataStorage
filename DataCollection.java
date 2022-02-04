@@ -84,6 +84,7 @@ public class DataCollection {
         String line; // a line in the file
         Matcher matchStart; // matches a line from file with start charcter
         Matcher matchEnd; // matches a line from file with end charcter
+        boolean inDataUnit = false; // checks if a line is in a data unit or not (between {, })
 
         while ((line = br.readLine()) != null) { // do the following if the line doesn't hold an empty value
 
@@ -93,13 +94,15 @@ public class DataCollection {
             if (matchStart.find()) { // if start character is found in line, add that line as a new unit
 
                 u.add(new DataUnit(line));
+                inDataUnit = true;
                 continue;
             }
             else if (matchEnd.find()) { // if end character is found in line, go to next line
 
+                inDataUnit = false;
                 continue;
             }
-            else if (this.size() < 1) { // to check if formatting is correct, !NOT SUSTAINABLE IMPLEMENTATION!
+            else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user 
 
                 throw new IOException("Formatting Error in Collection");
             }
