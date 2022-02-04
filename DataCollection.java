@@ -223,7 +223,7 @@ public class DataCollection {
 
     // this method is used to copy over all data units from another collection, it will result in duplicates
     // throws exception if something happens while reading or writing between collections
-    public void addContentOf(DataCollection dc) throws IOException {
+    public void addContentsOf(DataCollection dc) throws IOException {
 
         if (!dc.isEmpty()) { // checks if other collection is NOT empty
 
