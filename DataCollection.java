@@ -5,7 +5,7 @@
  *
  * This is a proof of concept for makeshift databases using files
  *
- * Author @qpeano [created 2022-01-29 | last updated: 2022-02-04]
+ * Author @qpeano [created 2022-01-29 | last updated: 2022-02-02]
  */
 
 
@@ -79,7 +79,7 @@ public class DataCollection {
     private void extract(File f, ArrayList<DataUnit> u) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
-        Pattern start = Pattern.compile("\\w+ \\{"); // marker for beginning of a new unit
+        Pattern start = Pattern.compile("[a-zA-Z0-9_)] + \\{"); // marker for beginning of a new unit
         Pattern end = Pattern.compile("\\}"); // marker for end of a unit
         String line; // a line in the file
         Matcher matchStart; // matches a line from file with start charcter
@@ -102,7 +102,7 @@ public class DataCollection {
                 inDataUnit = false;
                 continue;
             }
-            else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user 
+            else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user
 
                 throw new IOException("Formatting Error in Collection");
             }
@@ -121,9 +121,16 @@ public class DataCollection {
     private void printDataUnits(File f) throws IOException {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
-        for (DataUnit unit : this.units) { // writes all data units to storing file
+        for (int i = 0; i < this.size(); i++) { // writes all data units to storing file
 
-            bw.write(unit.toString());
+            if (i == this.size() - 1) {
+
+                bw.write(this.units.get(i).toString()); // last unit 
+            }
+            else {
+
+                bw.write(this.units.get(i).toString() + "\n"); // not last unit
+            }
         }
 
         bw.close(); // closed connection to file
@@ -145,6 +152,15 @@ public class DataCollection {
     public void add(String label, ArrayList<String> content) throws IOException {
 
         this.units.add(new DataUnit(label, content)); // adds new unit
+        this.printDataUnits(this.file); // prints all units out to file
+        this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+    }
+
+    // this is an overloaded method of the one above and is used for adding a new EMPTY unit to collection
+    // throws exception if something goes wrong with writing to file
+    public void add(String label) throws IOException {
+
+        this.units.add(new DataUnit(label)); // adds new unit without fragments
         this.printDataUnits(this.file); // prints all units out to file
         this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
     }
@@ -258,14 +274,28 @@ public class DataCollection {
     // also used in equals to get string representations of entire collections
     public String toString() {
 
-        String state = this.getPath() + ":\n"; // adds the path of collection
+        if (!this.isEmpty) {
 
-        for (DataUnit unit : this.units) { // goes through every unit and add their content to the string
+            String state = this.getPath() + ":\n"; // adds the path of collection
 
-            state += unit.toString();
+            for (int i = 0; i < this.size(); i++) { // goes through every unit and add their content to the string
+
+                if (i == this.size() - 1) {
+
+                    state += this.units.get(i).toString(); // last unit 
+                }
+                else {
+
+                    state += this.units.get(i).toString() + "\n"; // not last unit
+                }
+            }
+
+            return state; // returns state
         }
+        else {
 
-        return state;
+            return null; // returns empty value
+        }
     }
 
     // this method is used for adding a data fragment to an existing data unit in collection
