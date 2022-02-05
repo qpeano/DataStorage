@@ -2,7 +2,7 @@
  * This class represents a unit of data that consists of a label and content. The content consists of a list
  * of strings. Each string is called a fragment.
  *
- *  Author @qpeano [created 2022-01-28 | last updated 2022-02-04]
+ *  Author @qpeano [created 2022-01-28 | last updated 2022-02-05]
  */
 
 
@@ -125,7 +125,7 @@ public class DataUnit {
             }
         }
 
-        state += "\n}\n";
+        state += "\n}";
         return state;
     }
 
