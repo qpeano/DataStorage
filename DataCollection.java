@@ -5,7 +5,7 @@
  *
  * This is a proof of concept for makeshift databases using files
  *
- * Author @qpeano [created 2022-01-29 | last updated: 2022-02-02]
+ * Author @qpeano [created 2022-01-29 | last updated: 2022-02-05]
  */
 
 
@@ -79,17 +79,19 @@ public class DataCollection {
     private void extract(File f, ArrayList<DataUnit> u) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
-        Pattern start = Pattern.compile("[a-zA-Z0-9_)] + \\{"); // marker for beginning of a new unit
+        Pattern start = Pattern.compile("[a-zA-Z0-9_)]+ \\{"); // marker for beginning of a new unit
         Pattern end = Pattern.compile("\\}"); // marker for end of a unit
         String line; // a line in the file
         Matcher matchStart; // matches a line from file with start charcter
         Matcher matchEnd; // matches a line from file with end charcter
         boolean inDataUnit = false; // checks if a line is in a data unit or not (between {, })
+        int lineCounter = 0;
 
         while ((line = br.readLine()) != null) { // do the following if the line doesn't hold an empty value
 
             matchStart = start.matcher(line);
             matchEnd = end.matcher(line);
+            lineCounter++;
 
             if (matchStart.find()) { // if start character is found in line, add that line as a new unit
 
@@ -103,8 +105,8 @@ public class DataCollection {
                 continue;
             }
             else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user
-
-                throw new IOException("Formatting Error in Collection");
+                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+                throw new IOException(msg);
             }
             else { // else add line as a new data fragment to the last added unit
 
@@ -125,11 +127,11 @@ public class DataCollection {
 
             if (i == this.size() - 1) {
 
-                bw.write(this.units.get(i).toString()); // last unit 
+                bw.write(this.units.get(i).toString());
             }
             else {
 
-                bw.write(this.units.get(i).toString() + "\n"); // not last unit
+                bw.write(this.units.get(i).toString() + "\n");
             }
         }
 
@@ -160,7 +162,7 @@ public class DataCollection {
     // throws exception if something goes wrong with writing to file
     public void add(String label) throws IOException {
 
-        this.units.add(new DataUnit(label)); // adds new unit without fragments
+        this.units.add(new DataUnit(label)); // adds new unit
         this.printDataUnits(this.file); // prints all units out to file
         this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
     }
@@ -282,19 +284,19 @@ public class DataCollection {
 
                 if (i == this.size() - 1) {
 
-                    state += this.units.get(i).toString(); // last unit 
+                    state += this.units.get(i).toString();
                 }
                 else {
 
-                    state += this.units.get(i).toString() + "\n"; // not last unit
+                    state += this.units.get(i).toString() + "\n";
                 }
             }
 
-            return state; // returns state
+            return state;
         }
         else {
 
-            return null; // returns empty value
+            return null;
         }
     }
 
