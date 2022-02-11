@@ -85,13 +85,13 @@ public class DataCollection {
         Matcher matchStart; // matches a line from file with start charcter
         Matcher matchEnd; // matches a line from file with end charcter
         boolean inDataUnit = false; // checks if a line is in a data unit or not (between {, })
-        int lineCounter = 0;
+        int lineCounter = 0; // the line in collection 
 
         while ((line = br.readLine()) != null) { // do the following if the line doesn't hold an empty value
 
             matchStart = start.matcher(line);
             matchEnd = end.matcher(line);
-            lineCounter++;
+            lineCounter++; // incremeted with every new line that is read in
 
             if (matchStart.find()) { // if start character is found in line, add that line as a new unit
 
