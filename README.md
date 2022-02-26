@@ -1,1 +1,1 @@
-# DataStorage - a way of storing data in files 
+# DataStorage - structural data storage using files 
