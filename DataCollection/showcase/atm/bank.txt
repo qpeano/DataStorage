@@ -1,0 +1,24 @@
+Bruce {
+    dark_knight
+    1000
+}
+Barry {
+    fastestMan
+    721.31
+}
+Clark {
+    manOsteel
+    99
+}
+Diana {
+    WW22
+    9.39
+}
+Dick {
+    birdie
+    1221
+}
+Hal {
+    lantern67
+    10.11
+}
