@@ -475,7 +475,8 @@ public class Mask {
         String msg = "METHOD CANNOT BE APPLIED TO FILE WITHOUT AUTOENCODING\n";
         throw new Exception(msg);
     }
-
+    
+    @Override
     // method is used as a diagnostics tool to see if methods are working properly,
     // displays state of file and a snapshot of the settings of an instance of the Mask class
     public String toString() {
