@@ -1,1 +1,1 @@
-# DataStorage - structural data storage using files 
+# DataStorage - structural data storing using files 
