@@ -204,9 +204,9 @@ public class DataSet {
         String[] arr = this.splitToNChar(newStr, 3);
         int val;
         newStr = "";
-        for (String s : arr) {
+        for (int i = 1; i < arr.length; i++) { // skips 127
 
-            val = Integer.parseInt(s);
+            val = Integer.parseInt(arr[i]);
             char c = (char) val;
             newStr += c;
         }
@@ -215,6 +215,9 @@ public class DataSet {
     }
 
     // this method is used by the one above to seperate a string of words into a list of 3 character-strings
+    // source:
+    // stack overflow,"Splitting a string every n-th character", answer by Simon Nickerson [19-02-2010]
+    // https://stackoverflow.com/questions/2297347/splitting-a-string-at-every-n-th-character
     private String[] splitToNChar(String text, int size) {
         ArrayList<String> parts = new ArrayList<>();
 
@@ -224,4 +227,91 @@ public class DataSet {
         }
         return parts.toArray(new String[0]);
     }
+
+    // this method is used for printing out all data units and their content to a file
+    // throws exception if something goes wrong with writing to file
+    private void printDataUnits(File f) throws IOException {
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
+
+        if (this.isEncoded) {
+
+            this.updateEncryptedContent();
+            bw.write(this.encryptedContent);
+        }
+        else {
+
+            for (int i = 0; i < this.size(); i++) { // writes all data units to storing file
+
+                if (i == this.size() - 1) {
+
+                    bw.write(this.units.get(i).toString());
+                }
+                else {
+
+                    bw.write(this.units.get(i).toString() + "\n");
+                }
+            }
+        }
+
+        bw.close(); // closed connection to file
+    }
+
+    // this method is used by internal methods an UI methods to encrypt the data of the data units
+    public String internalEncrypt(String str) {
+
+        char[] arr = str.toCharArray();
+        String newStr = "";
+        int ind = 1;
+
+        for (char c : arr) {
+
+            String code = this.ascii(c);
+            if (ind % 10 == 0) {
+
+                newStr += code + "\n";
+            }
+            else {
+
+                newStr += code;
+            }
+            ind++;
+        }
+
+        return newStr;
+    }
+
+    // this method is used to format encrypted content so that its easy to decrypt it
+    public String ascii(char c) {
+
+        int val = (int) c;
+        String valStr;
+
+        if (val < 100) {
+
+            if (val < 10) {
+
+                valStr = "00" + val;
+            }
+            else {
+                valStr = "0" + val;
+            }
+        }
+        else {
+
+            valStr = val + "";
+        }
+
+        return valStr;
+    }
+
+    // this method is used to update the encrypted content so that data is not lost
+    private void updateEncryptedContent() throws IOException {
+
+
+    }
 }
+
+
+// - 261 make it so that the length of each line is random
+// - 183 tailor the exception to suit its use!!
