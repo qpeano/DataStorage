@@ -21,7 +21,7 @@ public class DataSet {
 
         this.file = new File(pathName); // connect to file
         this.file.createNewFile(); // create file if it does not exist
-        this.units = new ArratList<>(); // new unit list
+        this.units = new ArrayList<>(); // new unit list
         this.isEmpty = !(this.hasContent(this.file)); // checks if file has content or not, negated to suite use of filed
 
         if (!this.isEmpty()) { // if file isn't empty, get all info out and store it in unit list
@@ -47,13 +47,13 @@ public class DataSet {
         }
 
         br.close();
-        this.isEncoded = this.hasArtifact(f); // checks if file is encrypetd
+        this.isEncrypted = this.hasArtifact(f); // checks if file is encrypetd
         return result;
     }
 
-    // this method is used for setting the isEncoded field by seeing if an artifact of length 3 chars (127) is present in file
+    // this method is used for setting the isEncrypted field by seeing if an artifact of length 3 chars (127) is present in file
     // throws exception if something goes wrong with reading file
-    private boolean hasArtifact(f) throws IOException {
+    private boolean hasArtifact(File f) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(f)); // reading mechanism for file
 
@@ -75,7 +75,7 @@ public class DataSet {
     // throws exception if something goes wrong while writing to file
     private void extract() throws IOException {
 
-        if (this.isEncoded) {
+        if (this.isEncrypted) {
 
             this.encryptedContent = this.extractEncrypted();
         }
@@ -133,7 +133,7 @@ public class DataSet {
     // throws exception if some formatting is incorrect
     private String extractEncrypted() throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader()); // reading mechanism
+        BufferedReader br = new BufferedReader(new FileReader(this.file)); // reading mechanism
         StringBuilder content = new StringBuilder(); // used because concatinating strings take longer
         String line;
 
@@ -157,7 +157,7 @@ public class DataSet {
         String[] content = decryptedContent.split("\\n");
         Pattern start = Pattern.compile("[a-zA-Z0-9_)]+ \\{"); // marker for beginning of a new unit
         Pattern end = Pattern.compile("\\}"); // marker for end of a unit
-        String line; // a line in the file
+        // String line; // a line in file
         Matcher matchStart; // matches a line from file with start charcter
         Matcher matchEnd; // matches a line from file with end charcter
         boolean inDataUnit = false; // checks if a line is in a data unit or not (between {, })
@@ -208,7 +208,7 @@ public class DataSet {
 
             val = Integer.parseInt(arr[i]);
             char c = (char) val;
-            newStr.append(s);
+            newStr.append(c);
         }
 
         return newStr.toString();
@@ -234,7 +234,7 @@ public class DataSet {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
 
-        if (this.isEncoded) {
+        if (this.isEncrypted) {
 
             this.updateEncryptedContent();
             bw.write(this.encryptedContent);
@@ -333,7 +333,7 @@ public class DataSet {
 
     // this method is used for adding a new unit to set
     // throws exception if something goes wrong with writing to file
-    public void add(String label, String content) throws IOException {
+    public void add(String label, String content) throws IOException, Exception {
 
         if (!this.contains(label)) { // check to ensure that all labels are unique
 
@@ -345,7 +345,7 @@ public class DataSet {
 
     // this is an overloaded method of the one above and is used for adding a new unit to set
     // throws exception if something goes wrong with writing to file
-    public void add(String label, ArrayList<String> content) throws IOException {
+    public void add(String label, ArrayList<String> content) throws IOException, Exception {
 
         if (!this.contains(label)) { // check to ensure that all labels are unique
 
@@ -357,7 +357,7 @@ public class DataSet {
 
     // this is an overloaded method of the one above and is used for adding a new EMPTY unit to set
     // throws exception if something goes wrong with writing to file
-    public void add(String label) throws IOException {
+    public void add(String label) throws IOException, Exception {
 
         if (!this.contains(label)) { // check to ensure that all labels are unique
 
@@ -409,7 +409,7 @@ public class DataSet {
             return false;
         }
 
-        throw new Exception("DataCollection Is Empty"); // returns a message informing user about the emptiness of set
+        throw new Exception("DataSet Is Empty"); // returns a message informing user about the emptiness of set
     }
 
     // this method is used to see if a set (file representng a set) is empty
@@ -445,11 +445,11 @@ public class DataSet {
 
     // this method is used to copy over all data units from another set, it will result in duplicates
     // throws exception if something happens while reading or writing between sets
-    public void addContentsOf(DataCollection dc) throws IOException {
+    public void addContentsOf(DataSet ds) throws IOException {
 
-        if (!dc.isEmpty()) { // checks if other set is NOT empty
+        if (!ds.isEmpty()) { // checks if other set is NOT empty
 
-            for (DataUnit unit : dc.units) { // if so, goes through all units
+            for (DataUnit unit : ds.units) { // if so, goes through all units
 
                 this.units.add(unit); // adds units to this set
             }
@@ -462,11 +462,11 @@ public class DataSet {
     // this method checks is this sets is identical to another
     public boolean equals(Object other) {
 
-        if (other instanceof DataCollection) { // checks if argument is a set
+        if (other instanceof DataSet) { // checks if argument is a set
 
-            DataCollection dc = (DataCollection) other; // casted to access behaviour and fields of a set
+            DataSet ds = (DataSet) other; // casted to access behaviour and fields of a set
 
-            return (this.units.equals(dc.units)); // uses ArrayList.equals to see if contents of sets are identical
+            return (this.units.equals(ds.units)); // uses ArrayList.equals to see if contents of sets are identical
         }
 
         return false;
@@ -519,7 +519,7 @@ public class DataSet {
         }
         else {
             // do the following if set doesn't contain a unit with specified label
-            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Set: " + this.getPath();
             throw new Exception(msg);
         }
     }
@@ -585,17 +585,17 @@ public class DataSet {
 
     // this method is used by the user if they want to encrypt the content of the set
     // throws exception if something happens while writing stuff to file
-    public encrypt() throws IOException {
+    public void encrypt() throws IOException {
 
-        this.isEncoded = true; // turns on encryption
-        this.printDataUnits(); // prints encrypted version
+        this.isEncrypted = true; // turns on encryption
+        this.printDataUnits(this.file); // prints encrypted version
     }
 
     // this method is used by the user if they want to decrypt the content of the set
     // throws exception if something happens while writing stuff to file
-    public decrypt() throws IOException {
+    public void decrypt() throws IOException {
 
-        this.isEncoded = false; // turns off encryption
-        this.printDataUnits(); // prints decrypted version
+        this.isEncrypted = false; // turns off encryption
+        this.printDataUnits(this.file); // prints decrypted version
     }
 }
