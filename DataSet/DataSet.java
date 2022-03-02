@@ -51,7 +51,7 @@ public class DataSet {
         return result;
     }
 
-    // this method is used for setting the isEncoded field by seeing if an artifact of length 2 chars is present in file
+    // this method is used for setting the isEncoded field by seeing if an artifact of length 3 chars (127) is present in file
     // throws exception if something goes wrong with reading file
     private boolean hasArtifact(f) throws IOException {
 
@@ -116,7 +116,7 @@ public class DataSet {
                 continue;
             }
             else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user
-                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Set:" + this.getPath();
                 throw new IOException(msg);
             }
             else { // else add line as a new data fragment to the last added unit
@@ -181,7 +181,7 @@ public class DataSet {
                 continue;
             }
             else if (!inDataUnit) { // to check if formatting is correct, if text is found outside unit => informs user
-                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Set:" + this.getPath();
                 throw new IOException(msg);
             }
             else { // else add line as a new data fragment to the last added unit
@@ -195,23 +195,23 @@ public class DataSet {
     // this method is used to decrypt content without decrypting anything in the file
     private String internalDecrypt(String str) {
 
-        String newStr = "";
+        StringBuilder newStr = new StringBuilder(); // SB is faster
         String[] arr0 = str.split("\\s");
         for (String s : arr0) {
-            newStr += s;
+            newStr.append(s);
         }
 
-        String[] arr = this.splitToNChar(newStr, 3);
+        String[] arr = this.splitToNChar(newStr.toString(), 3);
         int val;
-        newStr = "";
+        newStr = new StringBuilder();
         for (int i = 1; i < arr.length; i++) { // skips 127
 
             val = Integer.parseInt(arr[i]);
             char c = (char) val;
-            newStr += c;
+            newStr.append(s);
         }
 
-        return newStr;
+        return newStr.toString();
     }
 
     // this method is used by the one above to seperate a string of words into a list of 3 character-strings
@@ -260,25 +260,29 @@ public class DataSet {
     // this method is used by internal methods an UI methods to encrypt the data of the data units
     public String internalEncrypt(String str) {
 
-        char[] arr = newStr.toCharArray();
-        String newStr = "";
+        char[] arr = str.toCharArray();
+        StringBuilder newStr = new StringBuilder();
+        Random rand = new Random();
+        int n = (rand.nextInt(10) + 1) * 30;
         int ind = 1;
 
         for (char c : arr) {
 
-            String code = this.ascii(c);
-            if (ind % 10 == 0) {
+            String code = ascii(c);
+            if (ind % n  == 0) {
 
-                newStr += code + "\n";
+                newStr.append(code);
+                newStr.append("\n");
+                n = (rand.nextInt(10) + 1) * 30;
             }
             else {
 
-                newStr += code;
+                newStr.append(code);
             }
             ind++;
         }
 
-        return ("127" + newStr); // add sea
+        return ("127" + newStr.toString()); // add sea
     }
 
     // this method is used to format encrypted content so that its easy to decrypt it
@@ -595,6 +599,3 @@ public class DataSet {
         this.printDataUnits(); // prints decrypted version
     }
 }
-
-// - 261 make it so that the length of each line is random
-// - 183 tailor the exception to suit its use!!
