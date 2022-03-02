@@ -11,7 +11,7 @@ public class DataSet {
     private ArrayList<DataUnit> units; // the content of a set
     private boolean isEmpty; // indicator to check if file is empty
     private boolean isEncrypted; // indicator to check if file is encrypted
-    private String encryptedContent; // encryted verson of text content in file
+    private String encryptedContent; // encryted version of text content in file
 
     /* CONSTRUCTORS */
 
@@ -85,7 +85,7 @@ public class DataSet {
         }
     }
 
-    // this method extracts all data from a file and fills the collections data units with said data
+    // this method extracts all data from a file and fills the sets data units with said data
     // throws exception if something goes wrong while writing to file
     private void extractDecrypted(File f, ArrayList<DataUnit> u) throws IOException {
 
@@ -260,7 +260,7 @@ public class DataSet {
     // this method is used by internal methods an UI methods to encrypt the data of the data units
     public String internalEncrypt(String str) {
 
-        char[] arr = str.toCharArray();
+        char[] arr = newStr.toCharArray();
         String newStr = "";
         int ind = 1;
 
@@ -278,7 +278,7 @@ public class DataSet {
             ind++;
         }
 
-        return newStr;
+        return ("127" + newStr); // add sea
     }
 
     // this method is used to format encrypted content so that its easy to decrypt it
@@ -308,10 +308,293 @@ public class DataSet {
     // this method is used to update the encrypted content so that data is not lost
     private void updateEncryptedContent() throws IOException {
 
+        StringBuilder encrypted = new StringBuilder();
+        for (int i = 0; i < this.size(); i++) { // writes all data units
 
+            if (i == this.size() - 1) {
+
+                encrypted.append(this.units.get(i).toString());
+            }
+            else {
+
+                encrypted.append(this.units.get(i).toString());
+                encrypted.append("\n");
+            }
+        }
+
+        this.encryptedContent = encrypted.toString();
+    }
+
+    /* USER INTERFACE */
+
+    // this method is used for adding a new unit to set
+    // throws exception if something goes wrong with writing to file
+    public void add(String label, String content) throws IOException {
+
+        if (!this.contains(label)) { // check to ensure that all labels are unique
+
+            this.units.add(new DataUnit(label, content)); // adds new unit
+            this.printDataUnits(this.file); // prints all units out to file
+            this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+        }
+    }
+
+    // this is an overloaded method of the one above and is used for adding a new unit to set
+    // throws exception if something goes wrong with writing to file
+    public void add(String label, ArrayList<String> content) throws IOException {
+
+        if (!this.contains(label)) { // check to ensure that all labels are unique
+
+            this.units.add(new DataUnit(label, content)); // adds new unit
+            this.printDataUnits(this.file); // prints all units out to file
+            this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+        }
+    }
+
+    // this is an overloaded method of the one above and is used for adding a new EMPTY unit to set
+    // throws exception if something goes wrong with writing to file
+    public void add(String label) throws IOException {
+
+        if (!this.contains(label)) { // check to ensure that all labels are unique
+
+            this.units.add(new DataUnit(label)); // adds new unit
+            this.printDataUnits(this.file); // prints all units out to file
+            this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+        }
+    }
+
+    // this method is used for removing all occurrences a data unit with specific label
+    // throws exception if a unit with specific label is not found
+    public void remove(String targetLabel) throws IOException, Exception {
+
+        if (this.contains(targetLabel)) { // if set contains a unit with specified label, the unit is removed
+
+            for (int i = 0; i < this.size(); i++) { // goes through all units
+
+                if (this.units.get(i).getLabel().equals(targetLabel)) { // tests if each units label matches specifed label
+
+                    this.units.remove(i); // removes unit with specified label, if found
+                }
+            }
+
+            this.printDataUnits(this.file); // prints out all remaining units
+        }
+        else { // if not in set, method throws a message informing the user
+
+            String msg = "DataUnit With Label \"" + targetLabel + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
+
+        this.isEmpty = !(this.hasContent(this.file)); // checks if file without removed unit is now empty
+    }
+
+    // this method is used in the one above and is used for checking if a unit with specific label exists in set
+    // throws exception if set is empty or if hasContent() throws an exception
+    public boolean contains(String label) throws IOException, Exception {
+
+        if (this.hasContent(this.file)) { // checks if set is empty
+
+            for (DataUnit unit : this.units) { // tests if each units label matches specifed label
+
+                if (unit.getLabel().equals(label)) { // unit is found, -> returns true
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        throw new Exception("DataCollection Is Empty"); // returns a message informing user about the emptiness of set
+    }
+
+    // this method is used to see if a set (file representng a set) is empty
+    public boolean isEmpty() {
+
+        return this.isEmpty;
+    }
+
+    // this method is used to see where the set (text file representing a set) is stored on the computer
+    public String getPath() {
+
+        return this.file.toString();
+    }
+
+    // this method is used for getting the size of the set (number of units)
+    public int size() {
+
+        return this.units.size();
+    }
+
+    // this method is used for clearing a set clean. All data is lost forever if not copied to another set
+    // throws exception if something goes wrong while writing
+    public void clear() throws IOException {
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(this.file)); // connection to file, writing mechanism
+        bw.write(""); // overwrite everything with an empty string
+        bw.close(); // closed connection
+
+        this.units.clear(); // deletes all units from list
+        this.isEmpty = true; // sets status to EMPTY
+        this.encryptedContent = ""; // set encrypted content to nothing
+    }
+
+    // this method is used to copy over all data units from another set, it will result in duplicates
+    // throws exception if something happens while reading or writing between sets
+    public void addContentsOf(DataCollection dc) throws IOException {
+
+        if (!dc.isEmpty()) { // checks if other set is NOT empty
+
+            for (DataUnit unit : dc.units) { // if so, goes through all units
+
+                this.units.add(unit); // adds units to this set
+            }
+
+            this.printDataUnits(this.file); // prints out all units
+        }
+    }
+
+    @Override
+    // this method checks is this sets is identical to another
+    public boolean equals(Object other) {
+
+        if (other instanceof DataCollection) { // checks if argument is a set
+
+            DataCollection dc = (DataCollection) other; // casted to access behaviour and fields of a set
+
+            return (this.units.equals(dc.units)); // uses ArrayList.equals to see if contents of sets are identical
+        }
+
+        return false;
+    }
+
+    @Override
+    // this method is used as a diagnostics tool to see if all other methods are working
+    // also used in equals to get string representations of entire sets
+    public String toString() {
+
+        if (!this.isEmpty) {
+
+            String state = this.getPath() + ":\n"; // adds the path of set
+
+            for (int i = 0; i < this.size(); i++) { // goes through every unit and add their content to the string
+
+                if (i == this.size() - 1) {
+
+                    state += this.units.get(i).toString();
+                }
+                else {
+
+                    state += this.units.get(i).toString() + "\n";
+                }
+            }
+
+            return state;
+        }
+        else {
+
+            return null;
+        }
+    }
+
+    // this method is used for adding a data fragment to an existing data unit in set
+    // throws exception if unit with specified label does not exist
+    public void addTo(String label, String fragment) throws IOException, Exception {
+
+        if (this.contains(label)) { // if set contains a unit with specified label
+
+            for (int i = 0; i < this.size(); i++) { // goes through all all units
+
+                if (this.units.get(i).getLabel().equals(label)) { // do the following if data unit is found
+
+                    this.units.get(i).addTo(fragment); // adds fragment to unit
+                }
+            }
+
+            this.printDataUnits(this.file); // prints all data units with their content to file
+        }
+        else {
+            // do the following if set doesn't contain a unit with specified label
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Collection: " + this.getPath();
+            throw new Exception(msg);
+        }
+    }
+
+    // this method is used to get rid of all content/ fragments from units with a specific label
+    // throws exception if something goes wrong while searching for unit, or printing all remaining units
+    public void clearDataUnit(String label) throws IOException, Exception {
+
+        if (this.contains(label)) { // if set contains a unit with specified label
+
+            for (DataUnit unit : this.units) { // goes through all all units
+
+                if (unit.getLabel().equals(label)) { // do the following if data unit is found
+
+                    unit.clear(); // clears data unit
+                }
+            }
+
+            this.printDataUnits(this.file); // prints all remaining units
+        }
+        else {
+            // do the following if set doesn't contain a unit with specified label
+            String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Set: " + this.getPath();
+            throw new Exception(msg);
+        }
+    }
+
+    // this method is used to get the content of a the first found unit with specified label
+    public ArrayList<String> get(String label) throws Exception {
+
+        if (this.contains(label)) { // if a unit with specific label exists
+
+            for (DataUnit unit : this.units) { // go through whole list
+
+                if (unit.getLabel().equals(label)) { // if a first instance of unit with specific label is found
+
+                    return unit.getFragments(); // return its fragments as a list
+                }
+            }
+        }
+        // else inform the user about the non-existence of a unit with specified label
+        String msg = "DataUnit With Label \"" + label + "\" Does Not Exist In Set: " + this.getPath();
+        throw new Exception(msg);
+    }
+
+    // diagnostics tool to check if all units are in the set
+    // throws exception if a set is empty
+    public ArrayList<String> getAllLabels() throws Exception {
+
+        if (!this.isEmpty()) { // if NOT empty, proceed
+
+            ArrayList<String> labels = new ArrayList<String>(); // make a list for all labels
+            for (DataUnit unit : this.units) { // go through all units...
+
+                labels.add(unit.getLabel()); //... and get their lables
+            }
+
+            return labels; // return list of labels
+        }
+
+        throw new Exception("DataSet Is Empty"); // else, inform user
+    }
+
+    // this method is used by the user if they want to encrypt the content of the set
+    // throws exception if something happens while writing stuff to file
+    public encrypt() throws IOException {
+
+        this.isEncoded = true; // turns on encryption
+        this.printDataUnits(); // prints encrypted version
+    }
+
+    // this method is used by the user if they want to decrypt the content of the set
+    // throws exception if something happens while writing stuff to file
+    public decrypt() throws IOException {
+
+        this.isEncoded = false; // turns off encryption
+        this.printDataUnits(); // prints decrypted version
     }
 }
-
 
 // - 261 make it so that the length of each line is random
 // - 183 tailor the exception to suit its use!!
