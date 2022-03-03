@@ -2,7 +2,6 @@
  * for cases where you want to save unique sets of data. It also has a simple encryption system built in as a showcase in
  * the actual design.
  *
- *
  * Author @qpeano [created 2022-02-26 | last updated 2022-03-03]
  */
 
