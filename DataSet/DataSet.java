@@ -13,7 +13,7 @@ public class DataSet {
     private boolean isEncrypted; // indicator to check if file is encrypted
     private String encryptedContent; // encryted version of text content in file
 
-    /* CONSTRUCTORS */
+    /* CONSTRUCTOR */
 
     // ctor, takes file path
     // throws exception if something goes wrong while creating or reading file
@@ -233,10 +233,9 @@ public class DataSet {
     private void printDataUnits(File f) throws IOException {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
-
         if (this.isEncrypted) {
 
-            this.updateEncryptedContent();
+            this.encryptedContent = this.updateEncryptedContent();
             bw.write(this.encryptedContent);
         }
         else {
@@ -251,9 +250,9 @@ public class DataSet {
 
                     bw.write(this.units.get(i).toString() + "\n");
                 }
+
             }
         }
-
         bw.close(); // closed connection to file
     }
 
@@ -263,7 +262,7 @@ public class DataSet {
         char[] arr = str.toCharArray();
         StringBuilder newStr = new StringBuilder();
         Random rand = new Random();
-        int n = (rand.nextInt(10) + 1) * 30;
+        int n = (rand.nextInt(10) + 1) * 3;
         int ind = 1;
 
         for (char c : arr) {
@@ -273,7 +272,7 @@ public class DataSet {
 
                 newStr.append(code);
                 newStr.append("\n");
-                n = (rand.nextInt(10) + 1) * 30;
+                n = (rand.nextInt(10) + 1) * 3;
             }
             else {
 
@@ -310,7 +309,7 @@ public class DataSet {
     }
 
     // this method is used to update the encrypted content so that data is not lost
-    private void updateEncryptedContent() throws IOException {
+    private String updateEncryptedContent() throws IOException {
 
         StringBuilder encrypted = new StringBuilder();
         for (int i = 0; i < this.size(); i++) { // writes all data units
@@ -326,7 +325,7 @@ public class DataSet {
             }
         }
 
-        this.encryptedContent = encrypted.toString();
+        return this.internalEncrypt(encrypted.toString());
     }
 
     /* USER INTERFACE */
@@ -408,8 +407,8 @@ public class DataSet {
 
             return false;
         }
-
-        throw new Exception("DataSet Is Empty"); // returns a message informing user about the emptiness of set
+        return false;
+        //throw new Exception("DataSet Is Empty"); // returns a message informing user about the emptiness of set
     }
 
     // this method is used to see if a set (file representng a set) is empty
