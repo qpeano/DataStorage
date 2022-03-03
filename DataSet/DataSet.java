@@ -262,7 +262,7 @@ public class DataSet {
         char[] arr = str.toCharArray();
         StringBuilder newStr = new StringBuilder();
         Random rand = new Random();
-        int n = (rand.nextInt(10) + 1) * 3;
+        int n = (rand.nextInt(10) + 1) * 3; // first line shorter to account for 127 marker 
         int ind = 1;
 
         for (char c : arr) {
@@ -272,7 +272,7 @@ public class DataSet {
 
                 newStr.append(code);
                 newStr.append("\n");
-                n = (rand.nextInt(10) + 1) * 3;
+                n = (rand.nextInt(10) + 1) * 5;
             }
             else {
 
