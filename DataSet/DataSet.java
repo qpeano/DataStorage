@@ -1,3 +1,11 @@
+/* This is the third iteration of a device that stores data between executions of any program. This iteration is specialized
+ * for cases where you want to save unique sets of data. It also has a simple encryption system built in as a showcase in
+ * the actual design.
+ *
+ *
+ * Author @qpeano [created 2022-02-26 | last updated 2022-03-03]
+ */
+
 package data;
 import java.io.*;
 import java.util.ArrayList;
@@ -62,11 +70,12 @@ public class DataSet {
 
         while ((line = br.readLine()) != null) { // result remains false until line doesn't hold an empty value
 
-            result = line.contains("127"); // checks if first line has 127 in it
+            String first3Letters = line.substring(0, 3); // first 3 chars in file
+            result = first3Letters.equals("127"); // checks if first line STARTS with 127
             break; // go out of loop cuz 127 is not found anywhere else in file other than in first line
         }
 
-        br.close();
+        br.close(); // close connection
         return result;
     }
 
@@ -75,11 +84,11 @@ public class DataSet {
     // throws exception if something goes wrong while writing to file
     private void extract() throws IOException {
 
-        if (this.isEncrypted) {
+        if (this.isEncrypted) { // if encrypted, assign content of file to encrypted content
 
             this.encryptedContent = this.extractEncrypted();
         }
-        else {
+        else { // else, bind units to content of file
 
             this.extractDecrypted(this.file, this.units);
         }
@@ -144,7 +153,7 @@ public class DataSet {
         }
 
         br.close();
-        this.extractContent(content.toString(), this.units); // extracts decrypted contents from encrypted contents
+        this.extractContent(content.toString(), this.units); // extracts data units from encrypted contents
         return content.toString();
     }
 
@@ -153,13 +162,12 @@ public class DataSet {
     // throws exception if some formatting is incorrect
     private void extractContent(String source, ArrayList<DataUnit> u) throws IOException {
 
-        String decryptedContent = this.internalDecrypt(source);
-        String[] content = decryptedContent.split("\\n");
+        String decryptedContent = this.internalDecrypt(source); // decrypts contents
+        String[] content = decryptedContent.split("\\n"); // every line is now its own string
         Pattern start = Pattern.compile("[a-zA-Z0-9_)]+ \\{"); // marker for beginning of a new unit
         Pattern end = Pattern.compile("\\}"); // marker for end of a unit
-        // String line; // a line in file
-        Matcher matchStart; // matches a line from file with start charcter
-        Matcher matchEnd; // matches a line from file with end charcter
+        Matcher matchStart; // matches a line from content list with start charcter
+        Matcher matchEnd; // matches a line from content list with end charcter
         boolean inDataUnit = false; // checks if a line is in a data unit or not (between {, })
         int lineCounter = 0;
 
@@ -193,22 +201,24 @@ public class DataSet {
     }
 
     // this method is used to decrypt content without decrypting anything in the file
+    // line 208: starts at 2nd word because 1st word is 127, the encryption marker
     private String internalDecrypt(String str) {
 
-        StringBuilder newStr = new StringBuilder(); // SB is faster
-        String[] arr0 = str.split("\\s");
-        for (String s : arr0) {
+        StringBuilder newStr = new StringBuilder(); // SB is faster at combing strings
+        String[] arr0 = str.split("\\s"); // splits string from user into words (no white-space inbetween)
+        for (String s : arr0) { // adds every word to the stringbuilder, there is still no white-space
             newStr.append(s);
         }
 
-        String[] arr = this.splitToNChar(newStr.toString(), 3);
-        int val;
-        newStr = new StringBuilder();
-        for (int i = 1; i < arr.length; i++) { // skips 127
+        String[] arr = this.splitToNChar(newStr.toString(), 3); // string in stringbuilder into list of strings w/ length 3ch
+        int val; // the ascii value each string represents
+        newStr = new StringBuilder(); // assigned to another stringbuilder
 
-            val = Integer.parseInt(arr[i]);
-            char c = (char) val;
-            newStr.append(c);
+        for (int i = 1; i < arr.length; i++) { // goes through every 3ch word and parses the numerical value from it
+
+            val = Integer.parseInt(arr[i]); // parses the ascii value for a character
+            char c = (char) val; // converts value to character
+            newStr.append(c); // adds character to stringbuilder
         }
 
         return newStr.toString();
@@ -219,12 +229,13 @@ public class DataSet {
     // stack overflow,"Splitting a string every n-th character", answer by Simon Nickerson [19-02-2010]
     // https://stackoverflow.com/questions/2297347/splitting-a-string-at-every-n-th-character
     private String[] splitToNChar(String text, int size) {
-        ArrayList<String> parts = new ArrayList<>();
 
+        ArrayList<String> parts = new ArrayList<>();
         int length = text.length();
         for (int i = 0; i < length; i += size) {
             parts.add(text.substring(i, Math.min(length, i + size)));
         }
+
         return parts.toArray(new String[0]);
     }
 
@@ -235,8 +246,8 @@ public class DataSet {
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
         if (this.isEncrypted) {
 
-            this.encryptedContent = this.updateEncryptedContent();
-            bw.write(this.encryptedContent);
+            this.encryptedContent = this.updateEncryptedContent(); // assigns new value to encrypted content
+            bw.write(this.encryptedContent); // prints encrypted content to file
         }
         else {
 
@@ -257,15 +268,15 @@ public class DataSet {
     }
 
     // this method is used by internal methods an UI methods to encrypt the data of the data units
-    public String internalEncrypt(String str) {
+    private String internalEncrypt(String str) {
 
-        char[] arr = str.toCharArray();
-        StringBuilder newStr = new StringBuilder();
-        Random rand = new Random();
-        int n = (rand.nextInt(10) + 1) * 3; // first line shorter to account for 127 marker 
+        char[] arr = str.toCharArray(); // turns users string to char array
+        StringBuilder newStr = new StringBuilder(); // uses SB cuz it's faster than concatination
+        Random rand = new Random(); // used to get a random length for line
+        int n = (rand.nextInt(10) + 1) * 3; // first line shorter to account for 127 marker
         int ind = 1;
 
-        for (char c : arr) {
+        for (char c : arr) { // goes through char array and encrypts and formats each character, and adds it to SB
 
             String code = ascii(c);
             if (ind % n  == 0) {
@@ -281,26 +292,27 @@ public class DataSet {
             ind++;
         }
 
-        return ("127" + newStr.toString()); // add sea
+        return ("127" + newStr.toString()); // adds encryption marker
     }
 
     // this method is used to format encrypted content so that its easy to decrypt it
-    public String ascii(char c) {
+    private String ascii(char c) {
 
-        int val = (int) c;
-        String valStr;
+        int val = (int) c; // get ascii value
+        String valStr; // holds string representation of ascii value
 
-        if (val < 100) {
+        if (val < 100) { // if value is less than 100, proceed
 
-            if (val < 10) {
+            if (val < 10) { // if value is less than 10, add 2 0's and then value, to string rep
 
                 valStr = "00" + val;
             }
-            else {
+            else { // else add a 0 and then value, to string rep
+
                 valStr = "0" + val;
             }
         }
-        else {
+        else { // else, add value to string rep
 
             valStr = val + "";
         }
@@ -309,10 +321,11 @@ public class DataSet {
     }
 
     // this method is used to update the encrypted content so that data is not lost
-    private String updateEncryptedContent() throws IOException {
+    // throws exception if
+    private String updateEncryptedContent() {
 
-        StringBuilder encrypted = new StringBuilder();
-        for (int i = 0; i < this.size(); i++) { // writes all data units
+        StringBuilder encrypted = new StringBuilder(); // SB cuz it's fast
+        for (int i = 0; i < this.size(); i++) { // adds all data to SB
 
             if (i == this.size() - 1) {
 
@@ -325,7 +338,14 @@ public class DataSet {
             }
         }
 
-        return this.internalEncrypt(encrypted.toString());
+        return this.internalEncrypt(encrypted.toString()); // returns encrypted version of all data units
+    }
+
+    // this method is used for getting the size of the set (number of units)
+    // not apart of UI because it can be used to get info about an encrypted file
+    private int size() {
+
+        return this.units.size();
     }
 
     /* USER INTERFACE */
@@ -407,8 +427,7 @@ public class DataSet {
 
             return false;
         }
-        return false;
-        //throw new Exception("DataSet Is Empty"); // returns a message informing user about the emptiness of set
+        return false; // perhaps set is empty (?)
     }
 
     // this method is used to see if a set (file representng a set) is empty
@@ -423,12 +442,6 @@ public class DataSet {
         return this.file.toString();
     }
 
-    // this method is used for getting the size of the set (number of units)
-    public int size() {
-
-        return this.units.size();
-    }
-
     // this method is used for clearing a set clean. All data is lost forever if not copied to another set
     // throws exception if something goes wrong while writing
     public void clear() throws IOException {
@@ -440,6 +453,7 @@ public class DataSet {
         this.units.clear(); // deletes all units from list
         this.isEmpty = true; // sets status to EMPTY
         this.encryptedContent = ""; // set encrypted content to nothing
+        this.isEncrypted = false; // encryption is off as a default
     }
 
     // this method is used to copy over all data units from another set, it will result in duplicates
