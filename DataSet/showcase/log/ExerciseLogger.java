@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 public class ExerciseLogger {
 
-    private DataSet logFile; // file with all loggs
+    private DataSet logFile; // file with all logs
 
     /* CONSTRUCTOR */
 
     // takes path to file
     // throws exception if someting happens while setting up DataSet
-    public Logger(String pathName) throws IOException {
+    public ExerciseLogger(String pathName) throws IOException {
 
         this.logFile = new DataSet(pathName);
     }
@@ -44,7 +44,7 @@ public class ExerciseLogger {
         }
         else {
 
-            throw new Exception("DATE SHOULD BE FORMATTED YYYY-MM-DD");
+            throw new Exception("DATE SHOULD BE FORMATTED [YYYY]-[MM]-[DD]");
         }
     }
 
@@ -53,11 +53,11 @@ public class ExerciseLogger {
     private void checkFormatExercise(String fragment) throws Exception {
 
         Pattern format = Pattern.compile("[\\d+]\\*[\\d+] [\\w+] @ [\\d+][\\w*]");
-        Matcher matchFormat = format.macther(fragment);
+        Matcher matchFormat = format.matcher(fragment);
 
         if (!matchFormat.find()) {
 
-            throw new Exception("FORMAT OF EXERCISES IS SETS*REPS NAME @ WEIGHT/INTESITY");
+            throw new Exception("FORMAT OF EXERCISES IS [SETS]*[REPS] [NAME] @ [WEIGHT/INTESITY]");
         }
     }
 
@@ -84,7 +84,7 @@ public class ExerciseLogger {
 
         this.checkFormatDate(date);
         this.checkFormatExercise(exercises);
-        this.logFile.add(date, exercise);
+        this.logFile.add(date, exercises);
     }
 
     public void remove(String date) throws IOException, Exception {
@@ -98,5 +98,32 @@ public class ExerciseLogger {
         this.checkFormatDate(date);
         this.checkFormatExercise(addon);
         this.logFile.addTo(date, addon);
+    }
+
+    // this method is used for getting the data out of a data unit, and displaying it in a tangible way
+    // throws exception if something happens while retrieving the data
+    public String get(String date) throws Exception {
+
+        ArrayList<String> exercises = this.logFile.get(date);
+        StringBuilder state = new StringBuilder();
+
+        state.append(date);
+        state.append(":");
+        state.append("\n");
+
+        for (int i = 0; i < exercises.size(); i++) {
+
+            if (i == exercises.size() - 1) {
+
+                state.append(exercises.get(i));
+            }
+            else {
+
+                state.append(exercises.get(i));
+                state.append("\n");
+            }
+        }
+
+        return state.toString();
     }
 }
