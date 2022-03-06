@@ -44,7 +44,8 @@ class Main {
     public static void getWorkOut() throws Exception {
 
         System.out.print("DATE: ");
-        String date = in.nextLine();
+        String date = in.next();
+        in.nextLine();
         String state = log.get(date);
         System.out.println(state);
         System.out.println("----------");
