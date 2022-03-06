@@ -12,7 +12,7 @@ class Main {
 
     public static void main(String[] args) throws IOException, Exception {
 
-        log = new ExerciseLogger("/workspaces/85860293/migration/JAVA/PROJECTS/LOG/logs/loggings.txt");
+        log = new ExerciseLogger("loggings.txt");
         in = new Scanner(System.in);
 
         System.out.println("GET WORKOUT (1)\nADD WORKOUT (2)\nREMOVE WORKOUT (3)\nADD EXERCISE (4)");
