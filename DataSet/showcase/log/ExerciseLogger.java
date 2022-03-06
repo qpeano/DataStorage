@@ -52,7 +52,7 @@ public class ExerciseLogger {
     // throws exception if it isn't
     private void checkFormatExercise(String fragment) throws Exception {
 
-        Pattern format = Pattern.compile("[\\d+]\\*[\\d+] [\\w+] @ [\\d+][\\w*]");
+        Pattern format = Pattern.compile("[\\d+\\*\\d+ \\w+ @ \\d+\\w*]");
         Matcher matchFormat = format.matcher(fragment);
 
         if (!matchFormat.find()) {
@@ -107,9 +107,9 @@ public class ExerciseLogger {
         ArrayList<String> exercises = this.logFile.get(date);
         StringBuilder state = new StringBuilder();
 
-        state.append(date);
-        state.append(":");
-        state.append("\n");
+        // state.append(date);
+        // state.append(":");
+        // state.append("\n");
 
         for (int i = 0; i < exercises.size(); i++) {
 
