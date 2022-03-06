@@ -52,7 +52,7 @@ public class ExerciseLogger {
     // throws exception if it isn't
     private void checkFormatExercise(String fragment) throws Exception {
 
-        Pattern format = Pattern.compile("[\\d+\\*\\d+ \\w+ @ \\d+\\w*]");
+        Pattern format = Pattern.compile("[\\d+\\*\\d+ \\w+ @ \\d+\\w*]"); // <= not working
         Matcher matchFormat = format.matcher(fragment);
 
         if (!matchFormat.find()) {
