@@ -52,10 +52,10 @@ public class ExerciseLogger {
     // throws exception if it isn't
     private void checkFormatExercise(String fragment) throws Exception {
 
-        Pattern format = Pattern.compile("[\\d+\\*\\d+ \\w+ @ \\d+\\w*]"); // <= not working
+        Pattern format = Pattern.compile("(\\d+\\*\\d+ [a-zA-Z_-]+ @ \\d+[a-zA-Z]*)");
         Matcher matchFormat = format.matcher(fragment);
 
-        if (!matchFormat.find()) {
+        if (!matchFormat.matches()) {
 
             throw new Exception("FORMAT OF EXERCISES IS [SETS]*[REPS] [NAME] @ [WEIGHT/INTESITY]");
         }
