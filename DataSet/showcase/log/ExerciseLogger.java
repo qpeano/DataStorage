@@ -28,7 +28,7 @@ public class ExerciseLogger {
         Pattern dateFormat = Pattern.compile("\\d\\d\\d\\d-\\d\\d-\\d\\d");
         Matcher matchFormat = dateFormat.matcher(label);
 
-        if (matchFormat.find()) {
+        if (matchFormat.matches()) {
 
             int month = Integer.parseInt(label.substring(5, 7));
             int day = Integer.parseInt(label.substring(8));
@@ -52,7 +52,7 @@ public class ExerciseLogger {
     // throws exception if it isn't
     private void checkFormatExercise(String fragment) throws Exception {
 
-        Pattern format = Pattern.compile("(\\d+\\*\\d+ [a-zA-Z_-]+ @ \\d+[a-zA-Z]*)");
+        Pattern format = Pattern.compile("\\d+\\*\\d+ [a-zA-Z_-]+ @\\d+[a-zA-Z]*");
         Matcher matchFormat = format.matcher(fragment);
 
         if (!matchFormat.matches()) {
