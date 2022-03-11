@@ -1,0 +1,5 @@
+2022-03-04 {
+    2*2 push-ups @0
+    4*2 bench-press @78kg
+    3*3 sprints @100m
+}
