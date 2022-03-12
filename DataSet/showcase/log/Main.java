@@ -1,4 +1,4 @@
-* This program is a demonstration of a usecase for the DataSet class where you store exercise logs, and where every log has
+/* This program is a demonstration of a usecase for the DataSet class where you store exercise logs, and where every log has
  * to be unique.
  *
  * Author @qpeano [created 2022-03-04 | last updated 2022-03-04]
