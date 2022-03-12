@@ -1,3 +1,9 @@
+/* This is class represents a device that retrives and writes thing to a log, and is used to simulate a digital
+ * exercise logging system
+ *
+ * Author @qpeano [created 2022-03-04 | last updated 2022-03-12]
+ */
+
 package log;
 import data.DataSet;
 import data.DataUnit;
