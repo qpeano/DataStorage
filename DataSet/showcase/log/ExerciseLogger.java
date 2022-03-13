@@ -58,7 +58,7 @@ public class ExerciseLogger {
     // throws exception if it isn't
     private void checkFormatExercise(String fragment) throws Exception {
 
-        Pattern format = Pattern.compile("\\d+\\*\\d+ [a-zA-Z_-]+ @\\d+[a-zA-Z]*"); // exercise format
+        Pattern format = Pattern.compile("\\d+\\*\\d+ [a-zA-Z_-]+ @\\d+[\\.\\d+]*[a-zA-Z_]*"); // exercise format
         Matcher matchFormat = format.matcher(fragment);
 
         if (!matchFormat.matches()) { // if argument isn't in given format, inform user
