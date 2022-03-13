@@ -1,5 +1,23 @@
+2022-02-28 {
+    3*13 Bench @37kg
+    3*7 Chin_ups @13
+    3*8 Arm_curls @11.5kg
+    3*8 Overhead_press @22.5kg
+    3*8 Lat_pull @22.5kg
+    3*10 Wrist_curls @4kg_on_each_hand
+}
+2022-03-02 {
+    3*5 SLDL @40kg
+    3*5 Bench @47kg
+    3*6 Benpress @121.5kg
+    2*25 Calve_raises @0kg
+    3*1 Dead_hangs @11s
+}
 2022-03-04 {
-    2*2 push-ups @0
-    4*2 bench-press @78kg
-    3*3 sprints @100m
+    2*8 Glutus @49.5kg
+    2*6 Benpress @112.5kg
+    3*6 RDL @30kg
+    2*7 Benspark @49.5
+    3*8 Calve_raises @27kg
+    2*1 Dead_hangs @15s
 }
