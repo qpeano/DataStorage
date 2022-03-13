@@ -19,7 +19,7 @@ class Main {
     // start of program
     public static void main(String[] args) throws IOException, Exception {
 
-        log = new ExerciseLogger("/workspaces/85860293/migration/JAVA/PROJECTS/LOG/logs/loggings.txt");
+        log = new ExerciseLogger("loggings.txt");
         in = new Scanner(System.in);
 
         // asks user to enter a number (1-4)
