@@ -597,7 +597,7 @@ public class DataSet {
 
     // this method is used by the user if they want to encrypt the content of the set
     // throws exception if something happens while writing stuff to file
-    public void encrypt() throws IOException {
+    public void encrypt() throws IOException { // FAULTY
 
         this.isEncrypted = true; // turns on encryption
         this.printDataUnits(this.file); // prints encrypted version
@@ -611,3 +611,4 @@ public class DataSet {
         this.printDataUnits(this.file); // prints decrypted version
     }
 }
+ 
