@@ -1,5 +1,6 @@
 /* This is the third iteration of a device that stores data between executions of any program. This iteration is specialized
- * for cases where you want to save unique sets of data. It also has a simple encryption system built in as a showcase in
+ * for cases where you want to save unique sets of data, which means that every label in dataset is unique.
+ * It also has a simple encryption system built in as a showcase in
  * the actual design.
  *
  * Author @qpeano [created 2022-02-26 | last updated 2022-03-03]
@@ -19,6 +20,7 @@ public class DataSet {
     private boolean isEmpty; // indicator to check if file is empty
     private boolean isEncrypted; // indicator to check if file is encrypted
     private String encryptedContent; // encryted version of text content in file
+    private final String ENCRYPTIONARTIFACT = "127";
 
     /* CONSTRUCTOR */
 
@@ -70,7 +72,7 @@ public class DataSet {
         while ((line = br.readLine()) != null) { // result remains false until line doesn't hold an empty value
 
             String first3Letters = line.substring(0, 3); // first 3 chars in file
-            result = first3Letters.equals("127"); // checks if first line STARTS with 127
+            result = first3Letters.equals(this.ENCRYPTIONARTIFACT); // checks if first line STARTS with 127
             break; // go out of loop cuz 127 is not found anywhere else in file other than in first line
         }
 
@@ -291,7 +293,7 @@ public class DataSet {
             ind++;
         }
 
-        return ("127" + newStr.toString()); // adds encryption marker
+        return (this.ENCRYPTIONARTIFACT + newStr.toString()); // adds encryption artifact
     }
 
     // this method is used to format encrypted content so that its easy to decrypt it
@@ -597,7 +599,7 @@ public class DataSet {
 
     // this method is used by the user if they want to encrypt the content of the set
     // throws exception if something happens while writing stuff to file
-    public void encrypt() throws IOException { // FAULTY
+    public void encrypt() throws IOException {
 
         this.isEncrypted = true; // turns on encryption
         this.printDataUnits(this.file); // prints encrypted version
@@ -611,4 +613,3 @@ public class DataSet {
         this.printDataUnits(this.file); // prints decrypted version
     }
 }
-
