@@ -181,3 +181,4 @@ public class DataStorage {
         this.isEmpty = !(this.hasContent(this.file)); // checks if file without removed unit is now empty
     }
 }
+ 
