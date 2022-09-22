@@ -32,8 +32,19 @@ public class DataUnit {
 
         String formattedLabel = this.formatLabel(label);
         DataUnit innerUnit = new DataUnit(formattedLabel);
-        innerUnit.outerUnit = this; // does this work?
+        // innerUnit.outerUnit = this; // does this work?
+        innerUnit.outerUnit = this.getThisUnit();
         this.innerUnits.add(innerUnit);
         return innerUnit;
+    }
+
+    private DataUnit getThisUnit() {
+
+        return this;
+    }
+
+    public DataUnit getOuterUnit() {
+
+        return this.outerUnit;
     }
 }
