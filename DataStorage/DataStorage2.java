@@ -90,31 +90,35 @@ public class DataStorage {
 
                     currentUnit = new DataUnit(line);
                     u.add(currentUnit);
-                    layer++;
+                    layer++
                 }
-                else if (layer < spaces) {
+                else if (layer < spaces + 1) { // edited 2022-09-21 09:50
 
                     currentUnit = currentUnit.newInnerUnit(line);
                     layer++;
                 }
-                else if (layer == spaces) {
+                // else if (layer == spaces) {
 
-                    currentUnit.newInnerUnit(line);
-                }
+                //     currentUnit.newInnerUnit(line);
+                //     layer++;
+                // }
             }
             else if (matchEnd.matches()) {
 
-                int spaces = (line.replaceAll("[^ ]", "").length()) / 4;
-                if (layer > spaces) {
+                if (layer > 1) {
 
+                    layer--;
                     currentUnit = currentUnit.outerUnit();
+                }
+                else if (layer == 1) {
+
                     layer--;
                 }
             }
-            else if (layer == 0) { // to check if formatting is correct, if text is found outside unit => informs user
-                String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
-                throw new IOException(msg);
-            }
+            // else if (layer == 0) { // to check if formatting is correct, if text is found outside unit => informs user
+            //     String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+            //     throw new IOException(msg);
+            // }
             else {
 
                 currentUnit.add(line);
@@ -122,4 +126,3 @@ public class DataStorage {
         }
     }
 }
- 
