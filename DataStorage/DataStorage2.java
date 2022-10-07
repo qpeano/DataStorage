@@ -97,30 +97,26 @@ public class DataStorage {
                     currentUnit = currentUnit.newInnerUnit(line);
                     layer++;
                 }
-                // else if (layer == spaces) {
-
-                //     currentUnit.newInnerUnit(line);
-                //     layer++;
-                // }
             }
             else if (matchEnd.matches()) {
 
                 if (layer > 1) {
 
                     layer--;
-                    currentUnit = currentUnit.outerUnit();
+                    currentUnit = currentUnit.getOuterUnit();
                 }
                 else if (layer == 1) {
 
                     layer--;
                 }
             }
-            // else if (layer == 0) { // to check if formatting is correct, if text is found outside unit => informs user
-            //     String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
-            //     throw new IOException(msg);
-            // }
             else {
 
+                if (layer == 0) { // to check if formatting is correct, if text is found outside unit => informs user
+
+                    String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+                    throw new IOException(msg);
+                }
                 currentUnit.add(line);
             }
         }
