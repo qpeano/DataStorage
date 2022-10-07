@@ -24,18 +24,18 @@ public class DataUnit {
 
     private String formatFragment(String info) {
 
-        String newInfo = info.replaceAll("    ", ""); // removes tab
+        String newInfo = info.replaceAll("    ", ""); // removes tabs
         return newInfo;
     }
 
-    public DataUnit newInnerUnit(String label, /* DataUnit outerUnit */) {
+    public DataUnit newInnerUnit(String label) {
 
         String formattedLabel = this.formatLabel(label);
         DataUnit innerUnit = new DataUnit(formattedLabel);
         // innerUnit.outerUnit = this; // does this work?
         innerUnit.outerUnit = this.getThisUnit();
         this.innerUnits.add(innerUnit);
-        this.fragment.add(null); // assigns space for unit in file
+        this.fragments.add(null); // assigns space for a unit in file
         return innerUnit;
     }
 
@@ -55,10 +55,10 @@ public class DataUnit {
         this.fragments.add(newFragment);
     }
 
-    public String toString() {
+    private StringBuilder makeString() {
 
         StringBuilder content = new StringBuilder();
-        String formedLabel = this.label + " {\n";
+        String formedLabel = this.label + "{\n";
         content.append(formedLabel);
         int indexOfInnerUnitList = 0;
 
@@ -67,13 +67,14 @@ public class DataUnit {
             String fragment = this.fragments.get(count);
             if (fragment == null) {
 
-                String[] arrayOfElements = this.innerUnits.get(indexOfInnerUnitList).toString().split("\n");
-                for (int j = 0; j < arrayOfElements.length; j++) {
+                String[] arrayOfElements = this.innerUnits.get(indexOfInnerUnitList).makeString().toString().split("\n");
 
+                for (int j = 0; j < arrayOfElements.length; j++) {
                     String formattedLine;
                     if (j == arrayOfElements.length - 1) {
 
-                        formattedLine = "   " + arrayOfElements[j] + "\n}";
+                        formattedLine = "   " + arrayOfElements[j] + "\n";
+                        formattedLine += "   " + "}\n";
                     }
                     else {
 
@@ -92,12 +93,21 @@ public class DataUnit {
                 }
                 else {
 
-                    String formattedFragment =  "    " + fragment + "\n";
+                    formattedFragment =  "    " + fragment + "\n";
                 }
                 content.append(formattedFragment);
             }
         }
 
+       // content.append("}"); // duplicates } onto every last element because it is run for every unit
+       // addition of last bracket is done in getString();
+        return content;
+    }
+
+    public String toString() {
+
+        StringBuilder content = this.makeString();
+        content.append("}");
         return content.toString();
     }
 }
