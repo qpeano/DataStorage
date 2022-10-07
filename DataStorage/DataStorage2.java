@@ -75,7 +75,7 @@ public class DataStorage {
         Matcher matchEnd; // matches a line from file with end charcter
         int layer = 0; // the layer a line is in, layer being the number of nested data units a line is in
         int lineCounter = 0; // the number of a line in file
-        DataUnit currentUnit; // the unit a line is in, if that line is in a unit at all
+        DataUnit currentUnit = null; // the unit a line is in, if that line is in a unit at all
 
         while ((line = br.readLine()) != null) {  // do the following if the line doesn't hold an empty value
 
@@ -90,7 +90,7 @@ public class DataStorage {
 
                     currentUnit = new DataUnit(line);
                     u.add(currentUnit);
-                    layer++
+                    layer++;
                 }
                 else if (layer < spaces + 1) { // edited 2022-09-21 09:50
 
@@ -120,5 +120,70 @@ public class DataStorage {
                 currentUnit.add(line);
             }
         }
+
+        br.close();
+    }
+
+    // this method is used for printing out all data units and their content to a file
+    // throws exception if something goes wrong with writing to file
+    private void printDataUnits(File f) throws IOException {
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
+        for (int i = 0; i < this.size(); i++) { // writes all data units to storing file
+
+            if (i == this.size() - 1) {
+
+                bw.write(this.units.get(i).toString());
+            }
+            else {
+
+                bw.write(this.units.get(i).toString() + "\n");
+            }
+        }
+
+        bw.close(); // closed connection to file
+    }
+
+    // this method is used as a diagnostics tool to see if all other methods are working
+    // also used in equals to get string representations of entire collections
+    public String toString() {
+
+        if (!this.isEmpty) {
+
+            String state = this.getPath() + ":\n"; // adds the path of collection
+
+            for (int i = 0; i < this.size(); i++) { // goes through every unit and add their content to the string
+
+                if (i == this.size() - 1) {
+
+                    state += this.units.get(i).toString();
+                }
+                else {
+
+                    state += this.units.get(i).toString() + "\n";
+                }
+            }
+
+            return state;
+        }
+        else {
+
+            return null;
+        }
+    }
+
+    public int size() {
+
+        return this.units.size();
+    }
+
+    public String getPath() {
+
+        return this.file.toString();
+    }
+
+    public boolean isEmpty() {
+
+        return this.isEmpty;
     }
 }
