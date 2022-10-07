@@ -79,6 +79,7 @@ public class DataStorage {
 
         while ((line = br.readLine()) != null) {  // do the following if the line doesn't hold an empty value
 
+            System.out.println(layer); // !! DIAGNOSTICS
             matchStart = start.matcher(line);
             matchEnd = end.matcher(line);
             lineCounter++; // incremeted with every new line that is read in
@@ -108,6 +109,11 @@ public class DataStorage {
                 else if (layer == 1) {
 
                     layer--;
+                }
+                if (layer < 0) {
+
+                    String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
+                    throw new IOException(msg);
                 }
             }
             else {
