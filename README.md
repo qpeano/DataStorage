@@ -7,29 +7,29 @@ A DataStorage is a file consisting of DataUnits, which are containers for data. 
 (1) EX: DataUnits, STATUS__P1 and STATUS_P2, with several inner DataUnits that have different fragments. 
 
 STATUS_P1 {\
-&emsp;&emsp;&emsp;&emsp;HP {
-        100
-    }
-    LVL {
-        13
-    }
-    MANNA {
-        122
-    }
-    GOLD {
-        98
-    }
-    EQUIPPED_WEAPON {
-        BATTLE_AXE {
-            DAMAGE {
-                100
-            }
-            QUIRK {
-                LANDSLIDE
-            }
-        }
-    }
-}
+&emsp;&emsp;&emsp;&emsp;HP {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;100\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;LVL {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;13\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;MANNA {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;122\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;GOLD {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;98\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;EQUIPPED_WEAPON {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;BATTLE_AXE {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;DAMAGE {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;100\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;QUIRK {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp&emsp;&emsp;&emsp;&emsp;;LANDSLIDE\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;}\
+}\
 
 STATUS_P2 {
     HP {
