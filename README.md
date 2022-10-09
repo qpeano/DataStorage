@@ -6,7 +6,7 @@ A DataStorage is a file consisting of DataUnits, which are containers for data. 
 
 (1) EX: DataUnits, STATUS__P1 and STATUS_P2, with several inner DataUnits that have different fragments. 
 
-STATUS_P1 {\\
+STATUS_P1 {\
     HP {
         100
     }
