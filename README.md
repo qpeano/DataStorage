@@ -29,31 +29,31 @@ STATUS_P1 {\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
 &emsp;&emsp;&emsp;&emsp;}\
-}\
+}
 
-STATUS_P2 {
-    HP {
-        89
-    }
-    LVL {
-        12
-    }
-    MANNA {
-        990
-    }
-    GOLD {
-        0
-    }
-    EQUIPPED_WEAPON {
-        LONG_SWORD {
-            DAMAGE {
-                122
-            }
-            QUIRK {
-                FLAME
-            }
-        }
-    }
+STATUS_P2 {\
+&emsp;&emsp;&emsp;&emsp;HP {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;89\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;LVL {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;18\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;MANNA {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;200\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;GOLD {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;0\
+&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;EQUIPPED_WEAPON {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;LONG_SWORD {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;DAMAGE {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;120\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;QUIRK {\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;FLAME\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
+&emsp;&emsp;&emsp;&emsp;}\
 }
 
 - Developement Thus Far
