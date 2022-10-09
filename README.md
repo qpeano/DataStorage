@@ -29,7 +29,7 @@ STATUS_P1 {\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
 &emsp;&emsp;&emsp;&emsp;}\
-}
+}\
 STATUS_P2 {\
 &emsp;&emsp;&emsp;&emsp;HP {\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;89\
