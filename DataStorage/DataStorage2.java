@@ -79,59 +79,62 @@ public class DataStorage {
 
         while ((line = br.readLine()) != null) {  // do the following if the line doesn't hold an empty value
 
-            System.out.println(layer); // !! DIAGNOSTICS
             matchStart = start.matcher(line);
             matchEnd = end.matcher(line);
             lineCounter++; // incremeted with every new line that is read in
 
-            if (matchStart.matches()) {
+            if (matchStart.matches()) { // if start character is found in line, add that line as a new unit
 
-                int spaces = (line.replaceAll("[^ ]", "").length() - 1) / 4;
-                if (layer == 0) {
+                int spaces = (line.replaceAll("[^ ]", "").length() - 1) / 4; // counts number of tabs => correlates to layer
+                if (layer == 0) { // if line isn't already in a unit, create and add new unit with line
 
                     currentUnit = new DataUnit(line);
                     u.add(currentUnit);
                     layer++;
                 }
-                else if (layer < spaces + 1) { // edited 2022-09-21 09:50
+                else if (layer < spaces + 1) { // if line is in a unit, create a new inner unit, and add that with the line
 
                     currentUnit = currentUnit.newInnerUnit(line);
                     layer++;
                 }
             }
-            else if (matchEnd.matches()) {
+            else if (matchEnd.matches()) { // if end character is found in line, exit current unit (goto outer unit)
 
-                if (layer > 1) {
+                if (layer > 1) { // if there exists outer units, exit current unit
 
                     layer--;
                     currentUnit = currentUnit.getOuterUnit();
                 }
-                else if (layer == 1) {
+                else if (layer == 1) { // if there are no outer units, just alter layer field to match situation
 
                     layer--;
                 }
-                if (layer < 0) {
+                if (layer < 0) { // if a end character that belongs to no unit exists tell user, terminate program
 
                     String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
                     throw new IOException(msg);
                 }
             }
-            else {
+            else { // if line has no special character, add it to the fragments of current unit
 
-                if (layer == 0) { // to check if formatting is correct, if text is found outside unit => informs user
+                if (layer == 0) { // if text is found outside a unit, tell user, terminate program
 
                     String msg = "Formatting Error In Line: " + lineCounter + "\nIn Collection :" + this.getPath();
                     throw new IOException(msg);
                 }
-                currentUnit.add(line);
+                currentUnit.add(line); // add line if not
             }
         }
 
-        br.close();
+        br.close(); // close connection to file
     }
 
-    // this method is used for printing out all data units and their content to a file
-    // throws exception if something goes wrong with writing to file
+    /**
+     * Method prints out all data units and their content to a file (the DataStorage)
+     *
+     * @param f the DataStorage file
+     * @throws IOException if something goes wrong while writing to file
+     */
     private void printDataUnits(File f) throws IOException {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
@@ -150,8 +153,49 @@ public class DataStorage {
         bw.close(); // closed connection to file
     }
 
-    // this method is used as a diagnostics tool to see if all other methods are working
-    // also used in equals to get string representations of entire collections
+    /* Methods - interface */
+
+    /**
+     * Method adds a new top-level unit to DataStorage
+     *
+     * @param label the name of the new unit
+     * @throws IOException if something happens while writing to file
+     */
+     public void add(String label) throws IOException {
+
+        this.units.add(new DataUnit(label)); // adds new unit
+        this.printDataUnits(this.file); // prints all units out to file
+        this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
+     }
+
+     /**
+      * Method adds a new unit to DataStorage using the labels of other units
+      *
+      * @param labelList the labels of a nesting series (??)
+      * @param label
+      * @throws IOException
+      */
+    public void add(String label, String[] labelList) throws IOException {
+
+        DataUnit current;
+        for (int nestIndex = 0, nestIndex < labelList.length; i++) {
+
+            if (this.getAllLabels().contains(labelList[nestIndex])) {
+
+                
+            }
+        }
+    }
+
+    /* Methods - other */
+
+    /**
+     * Method makes a string representation of the entire DataStorage.
+     * Used as a diagnostics tool to see if all other methods are working
+     *
+     * @return string representation of DataStorage
+     */
+    @Override // flag for complier
     public String toString() {
 
         if (!this.isEmpty) {
@@ -172,22 +216,37 @@ public class DataStorage {
 
             return state;
         }
-        else {
+        else { // if Datastorage is empty, return nothing
 
             return null;
         }
     }
 
+    /**
+     * Method gives the number of top-level units that exists in a DataStorage
+     *
+     * @return number of top-level units
+     */
     public int size() {
 
         return this.units.size();
     }
 
+    /**
+     * Method gives the string representation of the path of the DataStorage file
+     *
+     * @return path to DataStorage file
+     */
     public String getPath() {
 
         return this.file.toString();
     }
 
+    /**
+     * Method checks if the file is empty
+     *
+     * @return value signaling emptiness
+     */
     public boolean isEmpty() {
 
         return this.isEmpty;
