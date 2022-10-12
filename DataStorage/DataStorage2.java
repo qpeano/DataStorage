@@ -156,36 +156,26 @@ public class DataStorage {
     /* Methods - interface */
 
     /**
-     * Method adds a new top-level unit to DataStorage
+     * Method adds a new unit to DataStorage
      *
-     * @param label the name of the new unit
+     *
+     * @param chainedLabel the chain-name of the new unit, format: "layer1Label : Layer2label : Layer3label..."
+     * where layer1Label, layer2Label exist in dataStorage
      * @throws IOException if something happens while writing to file
      */
-     public void add(String label) throws IOException {
+     public void add(String chainedLabel) throws IOException {
 
-        this.units.add(new DataUnit(label)); // adds new unit
-        this.printDataUnits(this.file); // prints all units out to file
-        this.isEmpty = false; // changes status to NOT EMPTY, if file was empty before
-     }
+        String[] labels = chainedLabel.split(" : ");
+        for(int unitIndex = 0; unitIndex < this.size(); unitIndex++) {
 
-     /**
-      * Method adds a new unit to DataStorage using the labels of other units
-      *
-      * @param labelList the labels of a nesting series (??)
-      * @param label
-      * @throws IOException
-      */
-    public void add(String label, String[] labelList) throws IOException {
+            DataUnit tempUnit = this.units.get(unitIndex);
+            ArrayList<String> innerLabels;
+            for (int labelIndex = 0; labelIndex < labels.length - 1; labelIndex++) {
 
-        DataUnit current;
-        for (int nestIndex = 0, nestIndex < labelList.length; i++) {
 
-            if (this.getAllLabels().contains(labelList[nestIndex])) {
-
-                
             }
         }
-    }
+     }
 
     /* Methods - other */
 
