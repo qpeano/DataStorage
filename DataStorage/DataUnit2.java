@@ -137,6 +137,37 @@ public class DataUnit {
         this.fragments.add(newFragment);
     }
 
+    /**
+     * method is used to check if a unit with specified label exists in this unit
+     *
+     * @param label
+     * @return true if exists, false if not
+     */
+    public boolean hasInnerUnit(String label) {
+
+        ArrayList<String> innerLabels = this.getInnerLabels();
+        String formattedLabel = this.formatLabel(label);
+        boolean result = innerLabels.contains(formattedLabel);
+        return result;
+    }
+
+    /**
+     * method is used for retrieving all labels of the units that are in the layer below to this unit,
+     * that are in this unit
+     *
+     * @return labels of all units inside this units, that are in this unit
+     */
+    public ArrayList<String> getInnerLabels() {
+
+        ArrayList<String> labels = new ArrayList<>();
+        for (DataUnit du : this.innerUnits) {
+
+            labels.add(du.getLabel());
+        }
+
+        return labels;
+    }
+
     /* Methods - diagnostics & others */
 
     /**
@@ -147,6 +178,16 @@ public class DataUnit {
     public DataUnit getOuterUnit() {
 
         return this.outerUnit;
+    }
+
+    /**
+     * method returns label of this unit
+     *
+     * @return label of unit
+     */
+    public String getLabel() {
+
+        return this.label;
     }
 
     /**
