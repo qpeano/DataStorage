@@ -2,7 +2,7 @@
 
 - Structure
 
-A DataStorage is a file consisting of DataUnits, which are containers for data. They have a label which is used for retrieval. The data contained in a DataUnit is called fragments, and come in two forms. A fragment can either be a piece of text or a DataUnit. This allows for nested DataUnits if needed. The DataStorage itself is a text or binary file. If It is a text file it will have a clear structure, See (1). 
+A DataStorage is a file consisting of DataUnits, which are containers for data. They have a label which is used for retrieval. The data contained in a DataUnit is called contents and consists of fragments, and come in two forms. A fragment can either be a piece of text or a DataUnit. This allows for nested DataUnits if needed. The DataStorage itself is a text or binary file. If It is a text file it will have a clear structure, See (1). 
 
 (1) EX: DataUnits, STATUS__P1 and STATUS_P2, with several inner DataUnits that have different fragments. 
 
@@ -54,6 +54,9 @@ STATUS_P2 {\
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;}\
 &emsp;&emsp;&emsp;&emsp;}\
 }
+- Fomatting 
+
+The label of a DataUnit can not contain any special characters. they should only us alphanumeric characters amd underscore. The whitespaces used to distinguish a layer from another is very important, not adding enough whitespace will result in a unit being in a lower layer than it should be. Directly changing the DataStorage file should thus be done very carefully. 
 
 - Developement Thus Far
 
