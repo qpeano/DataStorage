@@ -64,4 +64,4 @@ A proof of concept was made in August 2021. Developement was then on-and-off, ye
 
 - What Is Next
 
-Extensive testing is still needed to make sure that the nested works for numerous configurations of DataUnits and fragments. The plan after that is to store the DataStorage in a binary file to save space, implementing a method called "snapshot" where user can get the current state of the DataStorage in a text file/ string, with the formatting seen in (1).
+Extensive testing is still needed to make sure that the nested works for numerous configurations of DataUnits and fragments. The plan after that is to store the DataStorage in a binary file to save space, implementing a method called "snapshot" where user can get the current state of the DataStorage in a text file/ string, with the formatting seen in (1). Implementations of other methdos used in DataStorage, such as retrieval of data from a specific DataUnit, is also on the list to get done. 
