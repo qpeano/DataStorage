@@ -29,7 +29,7 @@ public class DataUnit {
 
     /**
      * method removes special characters that are used by an extraction algorithm,
-     * leave only the label that was used when unit was defined¨
+     * leave only the label that was used when unit was defined
      *
      * @param name the unformatted version of what is used to get data of a unit
      * @return formatted label, without special characters
@@ -151,6 +151,12 @@ public class DataUnit {
         return result;
     }
 
+    // forgotten method
+    public String getLabel() {
+
+        return this.label;
+    }
+
     /**
      * method is used for retrieving all labels of the units that are in the layer below to this unit,
      * that are in this unit
@@ -168,6 +174,20 @@ public class DataUnit {
         return labels;
     }
 
+    // risky method
+    public DataUnit getInnerUnit(String label) {
+
+        for (int i = 0; i < this.innerUnits.size(); i++) {
+
+            if (this.innerUnits.get(i).getLabel().equals(label)) {
+
+                return this.innerUnits.get(i);
+            }
+        }
+
+        return null;
+    }
+
     /* Methods - diagnostics & others */
 
     /**
@@ -178,16 +198,6 @@ public class DataUnit {
     public DataUnit getOuterUnit() {
 
         return this.outerUnit;
-    }
-
-    /**
-     * method returns label of this unit
-     *
-     * @return label of unit
-     */
-    public String getLabel() {
-
-        return this.label;
     }
 
     /**
