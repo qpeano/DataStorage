@@ -1,4 +1,4 @@
-package data; 
+package data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -158,24 +158,57 @@ public class DataStorage {
     /**
      * Method adds a new unit to DataStorage
      *
-     *
-     * @param chainedLabel the chain-name of the new unit, format: "layer1Label : Layer2label : Layer3label..."
-     * where layer1Label, layer2Label exist in dataStorage
+     * @param labels the list of units to go through to add a new unit in desired place
+     * @param newLabel the label of the new unit
      * @throws IOException if something happens while writing to file
      */
-     public void add(String chainedLabel) throws IOException {
+    public void add(String[] labels, String newLabel) throws IOException, Exception {
 
-        String[] labels = chainedLabel.split(" : ");
-        for(int unitIndex = 0; unitIndex < this.size(); unitIndex++) {
+        int layerIndex = 0;
+        DataUnit unit = null;
+        boolean unitExists = false;
+        String fullLabelName = labels[layerIndex];
 
-            DataUnit tempUnit = this.units.get(unitIndex);
-            ArrayList<String> innerLabels;
-            for (int labelIndex = 0; labelIndex < labels.length - 1; labelIndex++) {
+        for (int i = 0; i < this.size(); i++) {
 
+            unitExists = this.units.get(i).getLabel().equals(labels[layerIndex]);
+            if (unitExists) {
 
+                unit = this.units.get(i);
+                layerIndex++;
+                break;
             }
         }
-     }
+
+        while (unitExists) {
+
+            boolean hasInnerUnit = unit.hasInnerUnit(labels[layerIndex]);
+            fullLabelName += "." + labels[layerIndex];
+            if (hasInnerUnit && (layerIndex < labels.length - 1)) {
+
+                unit = unit.getInnerUnit(labels[layerIndex]);
+                layerIndex++;
+            }
+            else if (hasInnerUnit && (layerIndex == labels.length - 1)) {
+
+                unit.newInnerUnit(newLabel);
+                return;
+            }
+            else {
+
+                unitExists = false;
+            }
+        }
+
+        String message = "DataUnit with label: " + fullLabelName + " does not exist\nIn Collection :" + this.getPath();
+        throw new Exception(message);
+    }
+
+    public void add(String newLabel) {
+
+        this.units.add(new DataUnit(newLabel));
+        this.printDataUnits(this.file);
+    }
 
     /* Methods - other */
 
