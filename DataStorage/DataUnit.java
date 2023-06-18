@@ -65,7 +65,7 @@ public class DataUnit {
         int indexOfInnerUnitList = 0; // keeps count on the next inner that the method needs to extract a string rep. from
 
         // adds the label of the top-level unit to string rep
-        String formedLabel = this.label + "{\n";
+        String formedLabel = this.label + " {\n";
         content.append(formedLabel);
 
         for (int count = 0; count < this.fragments.size(); count++) { // goes through all the fragments
@@ -108,6 +108,18 @@ public class DataUnit {
         return this;
     }
 
+    /**
+     * method checks if a label for a new inner unit is unique (has been used or not)
+     *
+     * @param label the label
+     * @return if it is unique or not
+     */
+    private boolean isLabelUniqueUptoLayer(String label) {
+
+        ArrayList<String> innerLabels = this.getInnerLabels();
+        return !(innerLabels.contains(label));
+    }
+
     /* Methods - interface */
 
     /**
@@ -119,11 +131,17 @@ public class DataUnit {
     public DataUnit newInnerUnit(String label) {
 
         String formattedLabel = this.formatLabel(label);
-        DataUnit innerUnit = new DataUnit(formattedLabel);
-        innerUnit.outerUnit = this.getThisUnit(); // the unit that holds the new unit is the current unit
-        this.innerUnits.add(innerUnit);
-        this.fragments.add(null); // assigns space for a unit in file
-        return innerUnit;
+
+        if (this.isLabelUniqueUptoLayer(formattedLabel)) {
+
+            DataUnit innerUnit = new DataUnit(formattedLabel);
+            innerUnit.outerUnit = this.getThisUnit(); // the unit that holds the new unit is the current unit
+            this.innerUnits.add(innerUnit);
+            this.fragments.add(null); // assigns space for a unit in file
+            return innerUnit;
+        }
+
+        return null; // returns nothing if there already exists a unit in layer with given label
     }
 
     /**
