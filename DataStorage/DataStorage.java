@@ -163,16 +163,22 @@ public class DataStorage {
         this.printDataUnits(this.file);
     }
 
-    public void addNewUnitTo(String[] labels, String newLabel) throws IOException, Exception {
+    public void addNewUnit(String newLabel) throws IOException, Exception {
 
-        int layerIndex = 0;
+        this.units.add(new DataUnit(newLabel));
+        this.printDataUnits(this.file);
+    }
+
+    public void addNewUnitTo(String[] labels, String newLabel)throws IOException, Exception {
+
         DataUnit unit = null;
         boolean unitExists = false;
-        String fullLabelName = labels[layerIndex];
+        String fullLabelName = labels[0];
+        int layerIndex = 0;
 
         for (int i = 0; i < this.size(); i++) {
 
-            unitExists = this.units.get(i).getLabel().equals(labels[layerIndex]);
+            unitExists = this.units.get(i).getLabel().equals(fullLabelName);
             if (unitExists) {
 
                 unit = this.units.get(i);
@@ -181,28 +187,32 @@ public class DataStorage {
             }
         }
 
-        while (unitExists) {
+        if (labels.length == 1 && unitExists) {
 
-            boolean hasInnerUnit = unit.hasInnerUnit(labels[layerIndex]);
-            fullLabelName += "." + labels[layerIndex];
-            if (hasInnerUnit && (layerIndex < labels.length - 1)) {
+            unit.newInnerUnit(newLabel);
+        }
+        else if (labels.length > 1 && unitExists) {
 
-                unit = unit.getInnerUnit(labels[layerIndex]);
-                layerIndex++;
+            for (int i = 1; i < labels.length; i++) {
+
+                boolean hasInnerUnit = unit.hasInnerUnit(labels[layerIndex]);
+                fullLabelName += "." + labels[layerIndex];
+                if (hasInnerUnit) {
+
+                    unit = unit.getInnerUnit(labels[layerIndex]);
+                    layerIndex++;
+                }
+                else {
+
+                    String message = "DataUnit with label: " + fullLabelName + " does not exist\nIn Collection :" + this.getPath();
+                    throw new Exception(message);
+                }
             }
-            else if (hasInnerUnit && (layerIndex == labels.length - 1)) {
 
-                unit.newInnerUnit(newLabel);
-                return;
-            }
-            else {
-
-                unitExists = false;
-            }
+            unit.newInnerUnit(newLabel);
         }
 
-        String message = "DataUnit with label: " + fullLabelName + " does not exist\nIn Collection :" + this.getPath();
-        throw new Exception(message);
+        this.printDataUnits(this.file);
     }
 
     /* Methods - other */
