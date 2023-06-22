@@ -36,7 +36,7 @@ public class DataUnit {
      */
     private String formatLabel(String name) {
 
-        String newName = name.replaceAll( "\\{", "").replaceAll( "    ", "");
+        String newName = name.replaceAll( "\\{", "").replaceAll( " ", "");
         return newName;
     }
 
