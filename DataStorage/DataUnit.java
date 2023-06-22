@@ -206,6 +206,18 @@ public class DataUnit {
         return null;
     }
 
+    // risky method
+    public void delete(String label) {
+
+        this.innerUnits.remove(label);
+    }
+
+    public void clear() {
+
+        this.innerUnits.clear();
+        this.fragments.clear();
+    }
+
     /* Methods - diagnostics & others */
 
     /**
