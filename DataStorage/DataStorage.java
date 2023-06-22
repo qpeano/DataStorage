@@ -153,29 +153,19 @@ public class DataStorage {
         bw.close(); // closed connection to file
     }
 
-    /* Methods - interface */
+    private DataUnit search(String pathLabel) throws Exception {
 
-    public void addNewUnit(String newLabel, String fragment) throws IOException, Exception {
+        String[] labels = pathLabel.split(".");
+        if (labels.length == 0) {
 
-        DataUnit newUnit = new DataUnit(newLabel);
-        newUnit.add(fragment);
-        this.units.add(newUnit);
-        this.printDataUnits(this.file);
-    }
-
-    public void addNewUnit(String newLabel) throws IOException, Exception {
-
-        this.units.add(new DataUnit(newLabel));
-        this.printDataUnits(this.file);
-    }
-
-    public void addNewUnitTo(String[] labels, String newLabel)throws IOException, Exception {
+            String msg = "Path to label not formatted correctly (correct formatting: ####.###.###)";
+            throw new Exception(msg);
+        }
 
         DataUnit unit = null;
         boolean unitExists = false;
         String fullLabelName = labels[0];
         int layerIndex = 0;
-
         for (int i = 0; i < this.size(); i++) {
 
             unitExists = this.units.get(i).getLabel().equals(fullLabelName);
@@ -189,7 +179,7 @@ public class DataStorage {
 
         if (labels.length == 1 && unitExists) {
 
-            unit.newInnerUnit(newLabel);
+            return unit;
         }
         else if (labels.length > 1 && unitExists) {
 
@@ -209,10 +199,64 @@ public class DataStorage {
                 }
             }
 
-            unit.newInnerUnit(newLabel);
+            return unit;
         }
 
+        String message = "DataUnit with label: " + labels[0] + " does not exist\nIn Collection :" + this.getPath();
+        throw new Exception(message);
+    }
+
+    /* Methods - interface */
+
+    public void addNewUnit(String newLabel, String fragment) throws IOException, Exception {
+
+        DataUnit newUnit = new DataUnit(newLabel);
+        newUnit.add(fragment);
+        this.units.add(newUnit);
         this.printDataUnits(this.file);
+    }
+
+    public void addNewUnit(String newLabel) throws IOException, Exception {
+
+        this.units.add(new DataUnit(newLabel));
+        this.printDataUnits(this.file);
+    }
+
+    public void addNewUnitTo(String pathLabel, String newLabel) throws IOException, Exception {
+
+        DataUnit outerUnit = this.search(pathLabel);
+        outerUnit.newInnerUnit(newLabel);
+        this.printDataUnits(this.file);
+    }
+
+    public void addNewUnitTo(String pathLabel, String newLabel, String fragment) throws IOException, Exception {
+
+        DataUnit outerUnit = this.search(pathLabel);
+        outerUnit.newInnerUnit(newLabel);
+        DataUnit unit = outerUnit.getInnerUnit(newLabel);
+        unit.add(fragment);
+        this.printDataUnits(this.file);
+    }
+
+    private void addFragmentTo(String pathLabel, String fragment) throws IOExceptio, Exception {
+
+        DataUnit unit = this.search(pathLabel);
+        unit.add(fragment);
+        this.printDataUnits(this.file);
+    }
+
+    private void deleteUnit(String pathLabel) throws IOException, Exception {
+
+        DataUnit unit = this.search(pathLabel);
+        String[] labels = pathLabel.split(".");
+        DataUnit outer = unit.getOuterUnit();
+        outer.delete(labels[labels.length - 1]);
+    }
+
+    private void clearUnit(String pathLabel) throws IOException, Exception {
+
+        DataUnit unit = this.search(pathLabel);
+        unit.clear();
     }
 
     /* Methods - other */
