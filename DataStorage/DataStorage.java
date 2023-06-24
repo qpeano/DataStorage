@@ -155,12 +155,8 @@ public class DataStorage {
 
     private DataUnit search(String pathLabel) throws Exception {
 
-        String[] labels = pathLabel.split(".");
-        if (labels.length == 0) {
-
-            String msg = "Path to label not formatted correctly (correct formatting: ####.###.###)";
-            throw new Exception(msg);
-        }
+        pathLabel += ".";
+        String[] labels = pathLabel.split("\\.");
 
         DataUnit unit = null;
         boolean unitExists = false;
@@ -238,25 +234,27 @@ public class DataStorage {
         this.printDataUnits(this.file);
     }
 
-    private void addFragmentTo(String pathLabel, String fragment) throws IOExceptio, Exception {
+    public void addFragmentTo(String pathLabel, String fragment) throws IOException, Exception {
 
         DataUnit unit = this.search(pathLabel);
         unit.add(fragment);
         this.printDataUnits(this.file);
     }
 
-    private void deleteUnit(String pathLabel) throws IOException, Exception {
+    public void deleteUnit(String pathLabel) throws IOException, Exception {
 
         DataUnit unit = this.search(pathLabel);
-        String[] labels = pathLabel.split(".");
+        String[] labels = pathLabel.split("\\.");
         DataUnit outer = unit.getOuterUnit();
         outer.delete(labels[labels.length - 1]);
+        this.printDataUnits(this.file);
     }
 
-    private void clearUnit(String pathLabel) throws IOException, Exception {
+    public void clearUnit(String pathLabel) throws IOException, Exception {
 
         DataUnit unit = this.search(pathLabel);
         unit.clear();
+        this.printDataUnits(this.file);
     }
 
     /* Methods - other */
