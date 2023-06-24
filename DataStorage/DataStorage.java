@@ -155,7 +155,6 @@ public class DataStorage {
 
     private DataUnit search(String pathLabel) throws Exception {
 
-        pathLabel += ".";
         String[] labels = pathLabel.split("\\.");
 
         DataUnit unit = null;
@@ -243,17 +242,25 @@ public class DataStorage {
 
     public void deleteUnit(String pathLabel) throws IOException, Exception {
 
-        DataUnit unit = this.search(pathLabel);
         String[] labels = pathLabel.split("\\.");
-        DataUnit outer = unit.getOuterUnit();
-        outer.delete(labels[labels.length - 1]);
+        DataUnit unit = this.search(pathLabel);
+        if (labels.length == 1) {
+
+            this.units.remove(unit);
+        }
+        else {
+
+            DataUnit outer = unit.getOuterUnit();
+            outer.deleteInner(labels[labels.length - 1]);
+        }
+
         this.printDataUnits(this.file);
     }
 
     public void clearUnit(String pathLabel) throws IOException, Exception {
 
         DataUnit unit = this.search(pathLabel);
-        unit.clear();
+        unit.clearThis();
         this.printDataUnits(this.file);
     }
 
