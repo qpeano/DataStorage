@@ -207,12 +207,19 @@ public class DataUnit {
     }
 
     // risky method
-    public void delete(String label) {
+    public void deleteInner(String label) {
 
-        this.innerUnits.remove(label);
+        for (DataUnit unit : this.innerUnits) {
+
+            if (unit.getLabel().equals(label)) {
+
+                this.innerUnits.remove(unit);
+                break;
+            }
+        }
     }
 
-    public void clear() {
+    public void clearThis() {
 
         this.innerUnits.clear();
         this.fragments.clear();
