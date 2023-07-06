@@ -209,11 +209,22 @@ public class DataUnit {
     // risky method
     public void deleteThis() {
 
-        if (this.outerUnit != null) {
+        int unitsToSkip = this.outerUnit.innerUnits.indexOf(this.getThisUnit());
+        for (int i = 0; i < this.outerUnit.fragments.size(); i++) {
 
-            this.outerUnit.innerUnits.remove(this.getThisUnit());
-            for (int i = 0; i < )
+            String unit = this.outerUnit.fragments.get(i);
+            if (unit == null) {
+
+                if (unitsToSkip == 0) {
+
+                    this.outerUnit.fragments.remove(i);
+                    break;
+                }
+
+                unitsToSkip--;
+            }
         }
+        this.outerUnit.innerUnits.remove(this.getThisUnit());
     }
 
     public void clearThis() {
