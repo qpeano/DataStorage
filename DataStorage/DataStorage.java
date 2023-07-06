@@ -137,6 +137,7 @@ public class DataStorage {
      */
     private void printDataUnits(File f) throws IOException {
 
+        System.out.println(this.units.size());
         BufferedWriter bw = new BufferedWriter(new FileWriter(f)); // writing mechanism to file
         for (int i = 0; i < this.size(); i++) { // writes all data units to storing file
 
@@ -250,8 +251,7 @@ public class DataStorage {
         }
         else {
 
-            DataUnit outer = unit.getOuterUnit();
-            outer.deleteInner(labels[labels.length - 1]);
+            unit.deleteThis();
         }
 
         this.printDataUnits(this.file);
