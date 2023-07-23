@@ -57,11 +57,3 @@ STATUS_P2 {\
 - Fomatting 
 
 The label of a DataUnit can not contain any special characters. they should only us alphanumeric characters amd underscore. The whitespaces used to distinguish a layer from another is very important, not adding enough whitespace will result in a unit being in a lower layer than it should be. Directly changing the DataStorage file should thus be done very carefully. 
-
-- Developement Thus Far
-
-A proof of concept was made in August 2021. Developement was then on-and-off, yealding two more versions (DataCollection, and DataSet), both more or less an extenstion of the proof of concept. These versions, while essential for the developement of my programming ability, were and still are basic and lack the nested DataUnit feature that is present in the DataStorge class. That was the most difficult feature to implement. Months were spent with pen and paper to try to create an algorithm to handle it. The implementation, used as of 2022-10-09, was one of many algorithms, though this one actually made it into code. 
-
-- What Is Next
-
-Extensive testing is still needed to make sure that the nested works for numerous configurations of DataUnits and fragments. The plan after that is to store the DataStorage in a binary file to save space, implementing a method called "snapshot" where user can get the current state of the DataStorage in a text file/ string, with the formatting seen in (1). Implementations of other methdos used in DataStorage, such as retrieval of data from a specific DataUnit, is also on the list to get done. 
