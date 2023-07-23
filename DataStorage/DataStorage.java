@@ -1,9 +1,14 @@
+/* This is the fourth iteration of a device that stores data between executions of any program. This iteration is specialized
+ * for cases where you want to save units of data with unique labels up to layer. Units can also contain other units.
+ *
+ * Author @qpeano [created 2022-09-22 | last updated 2023-07-07]
+ */
+
 package data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
 
 public class DataStorage {
 
