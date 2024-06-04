@@ -1,4 +1,4 @@
-# DataStorage - structural data storing using text-and-binary files 
+# DataStorage - structural data storing using text-files
 
 - Structure
 
